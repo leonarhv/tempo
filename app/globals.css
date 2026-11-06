@@ -559,95 +559,216 @@ button:focus-visible .photo-expand {
   line-height: 1.9;
   padding-bottom: 6px;
 }
-.cast-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 35px 24px;
-  padding: 8px 0 0;
-  margin: 0;
-  list-style: none;
+.cast-call {
+  padding: 20px;
+  border: 1px solid #4b435e;
+  border-radius: 18px;
+  background: #282533;
+  color: #f5f1fa;
+  box-shadow: 0 14px 35px #28245215;
 }
-.cast-person {
-  min-width: 0;
-}
-.team-portrait {
-  position: relative;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: #d8d1e5;
-}
-.team-portrait img {
-  object-fit: cover;
-  filter: grayscale(1);
-}
-.portrait-placeholder {
-  position: absolute;
-  inset: 0;
+.call-heading {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 2px;
-  color: #79718d;
-  background: #ded8eb;
+  gap: 10px;
+  padding: 0 3px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e0d9ed;
 }
-.portrait-placeholder svg {
-  width: 47%;
-  height: 62%;
-  stroke: currentColor;
-  stroke-width: 1;
-  opacity: 0.5;
+.call-heading svg {
+  width: 21px;
+  height: 21px;
 }
-.portrait-placeholder > span {
-  font-size: 22px;
-  opacity: 0.7;
+.call-motion-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  margin-left: auto;
+  padding: 6px 11px;
+  border: 1px solid #ffffff26;
+  border-radius: 20px;
+  color: #e0d9ed;
+  background: #ffffff0b;
+  font-size: 10px;
 }
-.cast-person:nth-child(3n + 2) .portrait-placeholder {
-  background: #d6d4e6;
+.call-motion-toggle:hover {
+  background: #ffffff18;
 }
-.cast-person:nth-child(3n) .portrait-placeholder {
-  background: #e3daea;
+.call-motion-toggle svg {
+  width: 14px;
+  height: 14px;
 }
-.cast-direction .portrait-paper {
-  box-shadow:
-    0 3px 9px #28245210,
-    inset 0 0 0 1px #a79ab9;
+@media (prefers-reduced-motion: reduce) {
+  .call-motion-toggle {
+    display: none;
+  }
 }
-.cast-direction figcaption small {
-  color: var(--ink);
-  font-weight: 600;
+.call-leads,
+.call-cast {
+  display: grid;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  gap: 12px;
 }
-.portrait-paper {
-  padding: 7px 7px 20px;
-  background: #faf9fc;
-  box-shadow: 0 3px 9px #28245210;
+.call-leads {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 16px;
 }
-.cast-person:nth-child(3n + 1) .portrait-paper {
-  transform: rotate(-3deg);
+.call-cast {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
-.cast-person:nth-child(3n + 2) .portrait-paper {
-  transform: rotate(2.5deg);
+.call-participant {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid #ffffff08;
+  border-radius: 10px;
+  background: #3c3749;
 }
-.cast-person:nth-child(3n) .portrait-paper {
-  transform: rotate(-1deg);
+.call-participant:nth-child(3n + 2) {
+  background: #373c4a;
 }
-.cast-person:nth-child(2n) {
-  padding-top: 17px;
+.call-participant:nth-child(3n) {
+  background: #443949;
 }
-.cast-person figcaption {
-  margin-top: 15px;
-  text-align: center;
+.call-participant-featured {
+  aspect-ratio: 16 / 10;
+  border-color: #b5a3d0;
+  background: #433b54;
 }
-.cast-person figcaption > span {
+.call-participant-featured:nth-child(2) {
+  background: #3d4354;
+}
+.call-participant > figure {
+  position: absolute;
+  inset: 0;
+}
+.call-participant img {
+  object-fit: cover;
+}
+.call-avatar {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding-bottom: 22px;
+}
+.call-avatar > span {
+  display: grid;
+  place-items: center;
+  width: 39%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: #292337;
+  background: var(--avatar-color);
+  font-size: clamp(17px, 2.2vw, 30px);
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+.call-participant-featured .call-avatar {
+  padding-bottom: 10px;
+}
+.call-participant-featured .call-avatar > span {
+  width: 29%;
+  font-size: clamp(30px, 4.8vw, 58px);
+}
+.call-participant-caption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 12px 10px 9px;
+  background: linear-gradient(transparent, #1d192bc9);
+}
+.call-participant-caption strong {
   display: block;
-  font-size: 24px;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 500;
   overflow-wrap: anywhere;
 }
-.cast-person figcaption small {
+.call-participant-caption > span {
   display: block;
-  margin-top: 3px;
+  margin-top: 2px;
+  font-size: 9px;
+  line-height: 1.4;
+  color: #d0c8dd;
+}
+.call-participant-featured .call-participant-caption {
+  padding: 20px 16px 14px;
+}
+.call-participant-featured .call-participant-caption strong {
+  font-size: 15px;
+}
+.call-participant-featured .call-participant-caption > span {
   font-size: 11px;
-  color: var(--muted);
+}
+.call-muted,
+.call-pinned {
+  position: absolute;
+  top: 8px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  color: #eee8f6;
+  background: #272231a6;
+}
+.call-muted {
+  right: 8px;
+}
+.call-pinned {
+  left: 10px;
+  color: #dfd0f4;
+}
+.call-muted svg,
+.call-pinned svg {
+  width: 14px;
+  height: 14px;
+}
+.call-participant-featured .call-muted,
+.call-participant-featured .call-pinned {
+  top: 11px;
+  width: 30px;
+  height: 30px;
+}
+
+@media (max-width: 1000px) {
+  .call-cast {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .cast-call {
+    margin-inline: -5px;
+    padding: 12px;
+    border-radius: 13px;
+  }
+  .call-heading {
+    padding-bottom: 13px;
+    font-size: 12px;
+  }
+  .call-leads {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .call-cast {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .call-participant-featured {
+    aspect-ratio: 16 / 10;
+  }
+  .call-participant-featured .call-avatar > span {
+    font-size: 40px;
+  }
+  .call-avatar > span {
+    font-size: 24px;
+  }
 }
 .draft-caption {
   margin-top: 30px;
@@ -724,6 +845,30 @@ button:focus-visible .photo-expand {
   font-size: 12px;
   color: var(--muted);
   margin-right: 15px;
+}
+.instagram-profiles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 24px;
+}
+.info-dialog .instagram-profiles {
+  margin-top: 25px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ticket-reminder-availability .instagram-profiles {
+  margin-top: 10px;
+  gap: 8px 16px;
+}
+.instagram-profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.instagram-profile-link svg {
+  width: 14px;
+  height: 14px;
 }
 .site-footer {
   padding-top: 36px;
@@ -892,6 +1037,12 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   text-align: center;
   font-size: 28px;
   transform: rotate(-6deg);
+}
+.seven-minute-timer .countdown-label {
+  width: max-content;
+  padding: 0 8px 3px;
+  border-radius: 50%;
+  background: var(--paper);
 }
 .countdown-dial {
   position: relative;
@@ -1103,12 +1254,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   .about-layout {
     gap: 65px;
   }
-  .cast-grid {
-    gap: 16px;
-  }
-  .cast-person figcaption > span {
-    font-size: 21px;
-  }
   .process-grid {
     gap: 22px;
   }
@@ -1213,19 +1358,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   }
   .section-note {
     font-size: 24px;
-  }
-  .cast-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px 26px;
-  }
-  .cast-person figcaption > span {
-    font-size: 27px;
-  }
-  .cast-person:nth-child(2n) {
-    padding-top: 0;
-  }
-  .cast-person:nth-child(3n + 2) {
-    padding-top: 13px;
   }
   .process-section {
     padding-bottom: 0;
@@ -1446,29 +1578,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   }
   .section-note {
     font-size: 25px;
-  }
-  .cast-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px 25px;
-    padding-inline: 3px;
-  }
-  .cast-person:nth-child(3n + 2) {
-    padding-top: 0;
-  }
-  .cast-person:nth-child(2n) {
-    padding-top: 15px;
-  }
-  .cast-person figcaption > span {
-    font-size: 25px;
-  }
-  .cast-person figcaption {
-    margin-top: 13px;
-  }
-  .portrait-paper {
-    padding: 7px 7px 18px;
-  }
-  .cast-person figcaption small {
-    font-size: 9px;
   }
   .draft-caption {
     font-size: 9px;

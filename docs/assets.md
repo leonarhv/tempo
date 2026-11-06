@@ -5,7 +5,7 @@
 The supplied identity guides the design: deep blue ink `#282452`, lavender
 `#d8d1e9`, pale lilac `#eeebf5`, paper `#f7f5fb`, and muted writing `#68647e`.
 The layout follows a scrapbook: original lettering, one taped rehearsal print,
-open synopsis columns, cast prints, and rehearsal photographs.
+open synopsis columns, a video-call-style team grid, and rehearsal photographs.
 Cormorant Garamond is the display face, Manrope the body face, and Caveat the
 handwritten annotations. There are no animated section reveals.
 
@@ -20,8 +20,12 @@ handwritten annotations. There are no animated section reveals.
 - `public/images/theater-contact-sheet.png`: generated using the built-in imagegen
   tool for this prototype. It contains six fictional portraits and three fictional
   rehearsal photographs. The page currently uses only the rehearsal photographs
-  as CSS crops. The 25-person roster uses empty photo slots, ready for the real
-  portraits. These generated images are not photographs of the actual production.
+  as CSS crops. These generated images are not photographs of the actual production.
+- `public/images/call/`: three illustrative looping GIFs and their still posters,
+  repeated across the roster. The people are fictional placeholders. The image
+  sequences were created with built-in imagegen and assembled locally with FFmpeg.
+  Sources are preserved in `assets/call-sources/`; `scripts/build-call-gifs.mjs`
+  reproduces the GIFs without any network or generation calls.
 - `components/sympla-logo.tsx`: reuses the existing Sympla vector path from the
   neighboring `mostra-macunaima` project.
 
@@ -65,6 +69,28 @@ actors rehearsing an emotional scene on a bare stage with a single chair. The
 grid boundaries must be exactly at one-third and two-thirds, nine equally sized
 photos filling the whole image. This is illustrative prototype imagery, not real
 cast documentation.
+
+## Call animation prompts
+
+Only three generated people are used:
+
+- `wave-glasses`: Brazilian man in his forties, medium brown skin, short dark hair
+  graying at the temples, beard, round glasses, charcoal shirt; a small hand wave.
+- `smile-curly`: Brazilian woman in her thirties, medium brown skin, shoulder-length
+  dark curls, plum shirt; neutral expression gradually becoming a friendly smile.
+- `smile-freckles`: Brazilian woman in her thirties, light freckled skin,
+  auburn wavy hair, slate-blue shirt; neutral expression becoming a warm smile.
+
+Common imagegen prompt: photorealistic-natural, one landscape 3:2 sprite sheet,
+exactly three columns and two rows of square frames, with no borders, margins,
+text, numbers, logos, or UI. Every frame shows the same fictional person in an
+identical centered chest-up webcam composition, consistent face, clothing, room,
+lighting, and camera. Soft daylight and a blurred lavender-gray wall. Frames read
+left to right, top row then bottom row. For waving: hands down, raising a hand,
+palm tilted left, tilted right, left again, then centered. For smiling: neutral,
+slight smile, closed-mouth smile, warmer smile, small amount of teeth, brighter
+smile. Avoid identity changes, head movement, cropped hands, or extra fingers.
+The loops reverse these generated frames and use different neutral pauses.
 
 ## Fonts
 

@@ -1,10 +1,105 @@
+"use client";
+
 import Image from "next/image";
-import { productionTeam } from "@/lib/program";
+import { useState } from "react";
+import type { CSSProperties } from "react";
+import { Icon } from "@/components/icons";
+import { productionTeam, type ProductionMember } from "@/lib/program";
+
+const avatarColors = [
+  "#9c8db8",
+  "#98a6bb",
+  "#b395b0",
+  "#9caaa4",
+  "#ad9db9",
+  "#909fbd",
+];
+
+function CallParticipant({
+  person,
+  index,
+  featured = false,
+  motionPaused = false,
+}: {
+  person: ProductionMember;
+  index: number;
+  featured?: boolean;
+  motionPaused?: boolean;
+}) {
+  const initials = person.name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
+  return (
+    <li
+      className={`call-participant${featured ? " call-participant-featured" : ""}`}
+      style={
+        {
+          "--avatar-color": avatarColors[index % avatarColors.length],
+        } as CSSProperties
+      }
+    >
+      <figure>
+        {person.photo ? (
+          <Image
+            src={person.photo}
+            alt={`Retrato de ${person.name}`}
+            fill
+            sizes={
+              featured
+                ? "(max-width: 600px) 90vw, 45vw"
+                : "(max-width: 600px) 42vw, (max-width: 1000px) 22vw, 180px"
+            }
+          />
+        ) : person.animation ? (
+          <picture>
+            <source
+              media="(prefers-reduced-motion: reduce)"
+              srcSet={person.animation.poster}
+            />
+            <Image
+              src={
+                motionPaused ? person.animation.poster : person.animation.src
+              }
+              alt={person.animation.alt}
+              fill
+              unoptimized
+            />
+          </picture>
+        ) : (
+          <div
+            className="call-avatar"
+            role="img"
+            aria-label={`Foto de ${person.role.toLowerCase()} a adicionar`}
+          >
+            <span>{initials}</span>
+          </div>
+        )}
+        {featured && (
+          <span className="call-pinned" aria-hidden="true">
+            <Icon name="push-pin" />
+          </span>
+        )}
+        <span className="call-muted" aria-hidden="true">
+          <Icon name="mic-off" />
+        </span>
+        <figcaption className="call-participant-caption">
+          <strong>{person.name}</strong>
+          <span>{person.role}</span>
+        </figcaption>
+      </figure>
+    </li>
+  );
+}
 
 export function ProductionTeam() {
-  const castCount = productionTeam.filter(
-    (person) => person.role === "Elenco",
-  ).length;
+  const [motionPaused, setMotionPaused] = useState(false);
+  const direction = productionTeam.filter((person) => person.role !== "Elenco");
+  const cast = productionTeam.filter((person) => person.role === "Elenco");
 
   return (
     <section
@@ -14,62 +109,49 @@ export function ProductionTeam() {
     >
       <div className="page-width">
         <div className="section-heading">
-          <div>
-            <span className="section-note handwritten">
-              {productionTeam.length} pessoas
-            </span>
-            <h2 id="cast-title">Elenco e direção</h2>
-          </div>
-          <p>
-            {castCount} pessoas no elenco
-            <br />
-            Direção e assistência de direção
-          </p>
+          <h2 id="cast-title">Elenco e direção</h2>
         </div>
-
-        <ul className="cast-grid" aria-label="Elenco e equipe de direção">
-          {productionTeam.map((person) => (
-            <li
-              className={`cast-person${person.role !== "Elenco" ? " cast-direction" : ""}`}
-              key={person.id}
+        <div className="cast-call">
+          <div className="call-heading">
+            <Icon name="video" />
+            <span>Tempo</span>
+            <button
+              className="call-motion-toggle"
+              type="button"
+              aria-pressed={motionPaused}
+              onClick={() => setMotionPaused(!motionPaused)}
             >
-              <figure>
-                <div className="portrait-paper">
-                  <div className="team-portrait">
-                    {person.photo ? (
-                      <Image
-                        src={person.photo}
-                        alt={`Retrato de ${person.name}`}
-                        fill
-                        sizes="(max-width: 600px) 45vw, (max-width: 800px) 30vw, 220px"
-                      />
-                    ) : (
-                      <div
-                        className="portrait-placeholder"
-                        role="img"
-                        aria-label={`Foto de ${person.role.toLowerCase()} a adicionar`}
-                      >
-                        <svg
-                          viewBox="0 0 100 120"
-                          fill="none"
-                          aria-hidden="true"
-                        >
-                          <path d="M68 36c0 15-7 25-18 25S32 51 32 36s7-24 18-24 18 9 18 24Z" />
-                          <path d="M18 106V93c0-17 14-28 32-28s32 11 32 28v13" />
-                        </svg>
-                        <span className="handwritten">foto</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <figcaption>
-                  <span className="handwritten">{person.name}</span>
-                  <small>{person.role}</small>
-                </figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
+              <Icon name={motionPaused ? "play" : "pause"} />
+              <span>
+                {motionPaused ? "Retomar movimentos" : "Pausar movimentos"}
+              </span>
+            </button>
+          </div>
+          <ul
+            className="call-leads"
+            aria-label="Direção e assistência de direção"
+          >
+            {direction.map((person, index) => (
+              <CallParticipant
+                person={person}
+                index={index}
+                featured
+                motionPaused={motionPaused}
+                key={person.id}
+              />
+            ))}
+          </ul>
+          <ul className="call-cast" aria-label="Elenco">
+            {cast.map((person, index) => (
+              <CallParticipant
+                person={person}
+                index={index + direction.length}
+                motionPaused={motionPaused}
+                key={person.id}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

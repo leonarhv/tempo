@@ -18,13 +18,19 @@ Open [localhost:3000](http://localhost:3000).
 ## Editing the program
 
 - `lib/program.ts`: synopsis, the 25-person roster, rehearsal captions, Instagram, and the
-  eventual Sympla ticket URL. The Instagram link is the supplied `@cia.alea.t`.
+  eventual Sympla ticket URL. All Instagram entries offer both `@cia.alea.t` and
+  `@gatopingado_coletivo`, configured together in `program.instagrams`.
 - `components/digital-program.tsx`: sections, responsive menu, photo lightbox,
   ticket buttons, and the invitation shown after the countdown.
-- `components/production-team.tsx`: the full responsive roster, with direction
-  and assistant direction first, followed by 23 cast members. Names use lorem
-  ipsum and portraits are empty photo slots until actual material is supplied.
+- `components/production-team.tsx`: a video-call-inspired roster, with two larger
+  tiles for direction and assistant direction above the 23-person cast grid.
+  Names use lorem ipsum. Three illustrative GIFs are reused across the roster,
+  with different loop lengths. The call header can pause all movements; reduced
+  motion preferences show still posters. Real `photo` values take precedence.
   Set each member's `name` and `photo` in `productionTeam` to populate the program.
+- `lib/call-animations.ts`: the three local animation assets and their stills.
+  Rebuild them from the generated sheets with `node scripts/build-call-gifs.mjs`
+  (requires FFmpeg). No additional image generation is needed.
 - `components/seven-minute-timer.tsx`: the fixed seven-minute countdown. It resets
   on page reload, uses elapsed wall-clock time to catch up after tab changes, and
   stops at `00:00`. Clicking the round clock enlarges it in the center of the

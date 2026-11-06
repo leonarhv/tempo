@@ -1,9 +1,17 @@
+import { callAnimations, type CallAnimation } from "@/lib/call-animations";
+
 // Draft content only. Replace the illustrative copy, people, and images here.
 // Dates, times, venue, and the title are taken from the supplied visual identity.
 export const program = {
   title: "Tempo",
   subtitle: "Essa noite eu vou sonhar com você",
-  instagramUrl: "https://www.instagram.com/cia.alea.t/" as string | null,
+  instagrams: [
+    { name: "@cia.alea.t", url: "https://www.instagram.com/cia.alea.t/" },
+    {
+      name: "@gatopingado_coletivo",
+      url: "https://www.instagram.com/gatopingado_coletivo/",
+    },
+  ],
   ticketUrl: null as string | null,
   venue: "Teatro Escola Macunaíma",
   room: "Teatro 4",
@@ -19,22 +27,31 @@ export type ProductionMember = {
   name: string;
   role: "Direção" | "Assistência de direção" | "Elenco";
   photo: string | null;
+  animation?: CallAnimation;
 };
 
 // Add each person's name and a local /images/... photo path when available.
 export const productionTeam: ProductionMember[] = [
-  { id: "direcao", name: "Lorem ipsum", role: "Direção", photo: null },
+  {
+    id: "direcao",
+    name: "Lorem ipsum",
+    role: "Direção",
+    photo: null,
+    animation: callAnimations[0],
+  },
   {
     id: "assistencia-direcao",
     name: "Lorem ipsum",
     role: "Assistência de direção",
     photo: null,
+    animation: callAnimations[1],
   },
   ...Array.from({ length: 23 }, (_, index) => ({
     id: `elenco-${index + 1}`,
     name: "Lorem ipsum",
     role: "Elenco" as const,
     photo: null,
+    animation: callAnimations[(index + 2) % callAnimations.length],
   })),
 ];
 

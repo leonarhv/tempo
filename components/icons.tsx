@@ -6,6 +6,11 @@ type IconName =
   | "ticket"
   | "pin"
   | "clock"
+  | "video"
+  | "mic-off"
+  | "push-pin"
+  | "play"
+  | "pause"
   | "close"
   | "menu"
   | "chevron"
@@ -16,6 +21,24 @@ export function Icon({
   ...props
 }: SVGProps<SVGSVGElement> & { name: IconName }) {
   const paths: Record<IconName, React.ReactNode> = {
+    play: <path d="m8 5 11 7-11 7Z" />,
+    pause: <path d="M8 5v14M16 5v14" />,
+    video: (
+      <>
+        <rect x="3" y="6" width="12" height="12" rx="2" />
+        <path d="m15 10 6-3v10l-6-3" />
+      </>
+    ),
+    "mic-off": (
+      <>
+        <path d="M9 9v3a3 3 0 0 0 5 2m1-4V5a3 3 0 0 0-5.7-1.3M5 10v2a7 7 0 0 0 12 5m2-5v-2M12 19v3m-4 0h8M3 3l18 18" />
+      </>
+    ),
+    "push-pin": (
+      <>
+        <path d="m9 3 9 9m-9-9 2 5-5 5 5 5 5-5 5 2-9-9M9 16l-6 6" />
+      </>
+    ),
     arrow: (
       <>
         <path d="M5 12h14M13 6l6 6-6 6" />

@@ -55,6 +55,22 @@ function TicketButton({
   );
 }
 
+function InstagramLinks({ className = "text-link" }: { className?: string }) {
+  return program.instagrams.map((profile) => (
+    <a
+      key={profile.url}
+      href={profile.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      aria-label={`Instagram ${profile.name} (abre em nova aba)`}
+    >
+      {profile.name}
+      <Icon name="arrow" />
+    </a>
+  ));
+}
+
 export function DigitalProgram() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState<Modal>(null);
@@ -109,26 +125,6 @@ export function DigitalProgram() {
     setModal("gallery");
   }
 
-  const instagram = program.instagramUrl ? (
-    <a
-      className="icon-button"
-      href={program.instagramUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Instagram da peça (abre em nova aba)"
-    >
-      <Icon name="instagram" />
-    </a>
-  ) : (
-    <button
-      className="icon-button"
-      onClick={() => setModal("instagram")}
-      aria-label="Instagram da peça"
-    >
-      <Icon name="instagram" />
-    </button>
-  );
-
   return (
     <>
       <a className="skip-link" href="#conteudo">
@@ -149,7 +145,14 @@ export function DigitalProgram() {
           <a href="#processo">Nosso processo</a>
         </nav>
         <div className="header-actions">
-          {instagram}
+          <button
+            className="icon-button"
+            onClick={() => setModal("instagram")}
+            aria-label="Ver os dois perfis da turma no Instagram"
+            aria-haspopup="dialog"
+          >
+            <Icon name="instagram" />
+          </button>
           <TicketButton small />
           <button
             className="icon-button menu-toggle"
@@ -167,7 +170,6 @@ export function DigitalProgram() {
         <div className="hero-shell">
           <section className="hero page-width" aria-labelledby="play-title">
             <div className="hero-artwork">
-              <p className="program-label">Lorem ipsum dolor sit amet.</p>
               <h1 id="play-title" className="visually-hidden">
                 Tempo: essa noite eu vou sonhar com você
               </h1>
@@ -176,10 +178,6 @@ export function DigitalProgram() {
                 role="img"
                 aria-label="Identidade visual de Tempo: essa noite eu vou sonhar com você"
               />
-
-              <p className="hero-thought">
-                Lorem ipsum dolor sit amet, consectetur.
-              </p>
             </div>
             <div className="hero-collage">
               <span className="handwritten collage-note">
@@ -335,26 +333,10 @@ export function DigitalProgram() {
             <p className="draft-caption">Imagens de ensaio ilustrativas.</p>
             <div className="instagram-note">
               <Icon name="instagram" />
-              <p>Lorem ipsum dolor sit amet.</p>
-              {program.instagramUrl ? (
-                <a
-                  href={program.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-link"
-                >
-                  Acompanhe no Instagram
-                  <Icon name="arrow" />
-                </a>
-              ) : (
-                <button
-                  className="text-link"
-                  onClick={() => setModal("instagram")}
-                >
-                  Acompanhe no Instagram
-                  <Icon name="arrow" />
-                </button>
-              )}
+              <p>Siga nossos coletivos no Instagram</p>
+              <div className="instagram-profiles">
+                <InstagramLinks />
+              </div>
             </div>
           </div>
         </section>
@@ -456,18 +438,9 @@ export function DigitalProgram() {
               {!program.ticketUrl && (
                 <p className="ticket-reminder-availability">
                   As vendas abrem em breve.
-                  {program.instagramUrl && (
-                    <>
-                      {" "}
-                      <a
-                        href={program.instagramUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Acompanhe no Instagram.
-                      </a>
-                    </>
-                  )}
+                  <span className="instagram-profiles">
+                    <InstagramLinks className="instagram-profile-link" />
+                  </span>
                 </p>
               )}
               <button
@@ -479,11 +452,10 @@ export function DigitalProgram() {
             </>
           ) : (
             <>
-              <h2 id="dialog-title">Lorem ipsum dolor sit amet.</h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+              <h2 id="dialog-title">Instagram da turma</h2>
+              <div className="instagram-profiles">
+                <InstagramLinks />
+              </div>
               <button className="button" onClick={closeModal}>
                 Continuar explorando
                 <Icon name="arrow" />
