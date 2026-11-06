@@ -11,6 +11,11 @@ handwritten annotations. There are no animated section reveals.
 
 ## Images
 
+- `public/images/tempo-header.svg`: cropped from the user's `Design A4.svg`.
+  The A4 canvas and white cover shapes were removed, with an SVG mask and clip
+  preserving only the original Tempo lettering on a transparent background.
+  The viewBox fits the lettering, including its descender, with a two-unit margin.
+
 - `public/images/tempo-identity.png`: the user's original screenshot, copied
   unchanged. CSS uses blurred copies as background texture.
 - `public/images/tempo-lettering.png`: a transparent lettering derivative of the

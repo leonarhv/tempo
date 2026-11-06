@@ -209,6 +209,11 @@ body:has(.hero-shell) {
   letter-spacing: -2.5px;
   line-height: 1;
 }
+.header-logo {
+  display: block;
+  width: auto;
+  height: 76px;
+}
 .main-nav {
   display: flex;
   align-items: center;
@@ -1401,6 +1406,9 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   }
   .wordmark {
     font-size: 34px;
+  }
+  .header-logo {
+    height: 62px;
   }
   .header-actions {
     gap: 8px;

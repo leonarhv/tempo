@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { processPhotos, program } from "@/lib/program";
 import { ProductionTeam } from "@/components/production-team";
 import { Icon } from "@/components/icons";
@@ -132,7 +133,15 @@ export function DigitalProgram() {
       </a>
       <header className="site-header page-width" id="inicio">
         <a className="wordmark" href="#inicio" aria-label="Tempo, início">
-          tempo
+          <Image
+            src="/images/tempo-header.svg"
+            alt="Tempo"
+            width={495}
+            height={537}
+            className="header-logo"
+            unoptimized
+            preload
+          />
         </a>
         <nav
           id="main-nav"
