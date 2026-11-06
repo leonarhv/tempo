@@ -352,8 +352,15 @@ export function DigitalProgram() {
       </main>
       <footer className="site-footer">
         <div className="page-width footer-top">
-          <a className="wordmark" href="#inicio">
-            tempo
+          <a className="wordmark" href="#inicio" aria-label="Tempo, início">
+            <Image
+              src="/images/tempo-header.svg"
+              alt="Tempo"
+              width={495}
+              height={537}
+              className="header-logo"
+              unoptimized
+            />
           </a>
           <p className="handwritten">Essa noite eu vou sonhar com vocês</p>
           <a className="back-to-top" href="#inicio">
