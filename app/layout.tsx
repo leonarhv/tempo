@@ -36,6 +36,7 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL || "https://tempo.nomacu.com",
   ),
   title: playTitle,
+  applicationName: "Tempo",
   description: playDescription,
   alternates: { canonical: "/" },
   openGraph: {

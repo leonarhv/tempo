@@ -11,6 +11,10 @@ handwritten annotations. There are no animated section reveals.
 
 ## Images
 
+- `app/icon.png`, `app/apple-icon.png`, and `app/favicon.ico`: the official header
+  lettering on a lavender square, rendered locally from `tempo-header.svg`.
+  The PNGs are 512 and 180 pixels; the ICO includes 16, 32, and 48 pixel sizes.
+
 - `public/images/tempo-og.jpg`: an unchanged copy of the supplied root image
   `Sonhar com Você - André Haidamus.jpg` (958 × 635). It is used for Open Graph and
   Twitter Card previews. No AI generation, cropping, or recompression was applied.
