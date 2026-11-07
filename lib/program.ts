@@ -28,6 +28,7 @@ export type ProductionMember = {
   role: "Direção" | "Assistência de direção" | "Elenco";
   photo: string | null;
   animation?: CallAnimation;
+  pixelated?: boolean;
 };
 
 // Add each person's name and a local /images/... photo path when available.
@@ -46,7 +47,14 @@ export const productionTeam: ProductionMember[] = [
     photo: null,
     animation: callAnimations[1],
   },
-  ...Array.from({ length: 23 }, (_, index) => ({
+  {
+    id: "alan-silva",
+    name: "Alan Silva",
+    role: "Elenco",
+    photo: null,
+    pixelated: true,
+  },
+  ...Array.from({ length: 22 }, (_, index) => ({
     id: `elenco-${index + 1}`,
     name: "Lorem ipsum",
     role: "Elenco" as const,

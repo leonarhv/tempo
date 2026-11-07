@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import type { CSSProperties } from "react";
 import { Icon } from "@/components/icons";
+import { PixelatedPortrait } from "@/components/pixelated-portrait";
 import { productionTeam, type ProductionMember } from "@/lib/program";
 
 const avatarColors = [
@@ -36,7 +37,7 @@ function CallParticipant({
 
   return (
     <li
-      className={`call-participant${featured ? " call-participant-featured" : ""}`}
+      className={`call-participant${featured ? " call-participant-featured" : ""}${person.pixelated ? " call-participant-pixelated" : ""}`}
       style={
         {
           "--avatar-color": avatarColors[index % avatarColors.length],
@@ -44,7 +45,9 @@ function CallParticipant({
       }
     >
       <figure>
-        {person.photo ? (
+        {person.pixelated ? (
+          <PixelatedPortrait name={person.name} />
+        ) : person.photo ? (
           <Image
             src={person.photo}
             alt={`Retrato de ${person.name}`}
@@ -89,7 +92,14 @@ function CallParticipant({
         </span>
         <figcaption className="call-participant-caption">
           <strong>{person.name}</strong>
-          <span>{person.role}</span>
+          {person.pixelated ? (
+            <span className="call-connection-status">
+              <Icon name="connection-poor" />
+              Conexão ruim
+            </span>
+          ) : (
+            <span>{person.role}</span>
+          )}
         </figcaption>
       </figure>
     </li>

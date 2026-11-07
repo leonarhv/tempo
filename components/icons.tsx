@@ -8,6 +8,7 @@ type IconName =
   | "clock"
   | "video"
   | "mic-off"
+  | "connection-poor"
   | "push-pin"
   | "play"
   | "pause"
@@ -21,6 +22,13 @@ export function Icon({
   ...props
 }: SVGProps<SVGSVGElement> & { name: IconName }) {
   const paths: Record<IconName, React.ReactNode> = {
+    "connection-poor": (
+      <>
+        <path d="M4 20v-4M9 20v-8" />
+        <path d="M14 20V8M19 20V4" opacity=".3" />
+        <path d="m14 4 7 7m0-7-7 7" />
+      </>
+    ),
     play: <path d="m8 5 11 7-11 7Z" />,
     pause: <path d="M8 5v14M16 5v14" />,
     video: (

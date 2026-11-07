@@ -173,9 +173,7 @@ export function DigitalProgram() {
             </div>
             <div className="hero-collage">
               <span className="handwritten collage-note">
-                Lorem ipsum dolor
-                <br />
-                sit amet, consectetur.
+                Espero que seja bom.
               </span>
               <button
                 className="hero-polaroid"
@@ -192,7 +190,7 @@ export function DigitalProgram() {
                   sizes="(max-width: 600px) 80vw, 405px"
                 />
                 <span className="handwritten polaroid-caption">
-                  lorem ipsum dolor sit amet
+                  Não é simples.
                 </span>
                 <span className="photo-expand">
                   <Icon name="expand" />
@@ -212,7 +210,7 @@ export function DigitalProgram() {
                 />
               </svg>
               <p className="handwritten collage-bottom-note">
-                lorem ipsum dolor sit amet.
+                Espero que não seja interativa.
               </p>
             </div>
           </section>
@@ -278,7 +276,7 @@ export function DigitalProgram() {
                 </p>
               ))}
               <p className="handwritten synopsis-signature">
-                Lorem ipsum dolor sit amet.
+                Não é intuitivo.
               </p>
             </div>
           </div>
@@ -296,6 +294,7 @@ export function DigitalProgram() {
               <div>
                 <h2 id="process-title">Nosso processo</h2>
               </div>
+              <p className="handwritten section-quote">Não é óbvio.</p>
             </div>
             <ProcessMural onOpen={openMedia} />
             <div className="instagram-note">

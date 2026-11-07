@@ -24,7 +24,9 @@ Open [localhost:3000](http://localhost:3000).
   ticket buttons, and the invitation shown after the countdown.
 - `components/production-team.tsx`: a video-call-inspired roster, with two larger
   tiles for direction and assistant direction above the 23-person cast grid.
-  Names use lorem ipsum. Three illustrative GIFs are reused across the roster,
+  Names use lorem ipsum, except Alan Silva. His `pixelated: true` tile displays
+  an abstract pixel mosaic and **Conexão ruim**, without loading a photo or GIF,
+  even if one is later assigned. Three illustrative GIFs are reused across the roster,
   with different loop lengths. The call header can pause all movements; reduced
   motion preferences show still posters. Real `photo` values take precedence.
   Set each member's `name` and `photo` in `productionTeam` to populate the program.
