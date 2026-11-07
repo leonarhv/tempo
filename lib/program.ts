@@ -54,26 +54,3 @@ export const productionTeam: ProductionMember[] = [
     animation: callAnimations[(index + 2) % callAnimations.length],
   })),
 ];
-
-export const processPhotos = [
-  {
-    title: "Lorem ipsum dolor",
-    caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    alt: "Imagem ilustrativa de um grupo de artistas em um exercício de teatro",
-    position: "0% 100%",
-  },
-  {
-    title: "Sit amet consectetur",
-    caption:
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    alt: "Imagem ilustrativa de mãos segurando um texto de teatro anotado",
-    position: "50% 100%",
-  },
-  {
-    title: "Adipiscing elit",
-    caption:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
-    alt: "Imagem ilustrativa de dois artistas ensaiando em um palco",
-    position: "100% 100%",
-  },
-];

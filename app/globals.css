@@ -319,18 +319,6 @@ body:has(.hero-shell) {
 .hero-polaroid:hover {
   transform: rotate(-3deg) translateY(-3px);
 }
-.contact-photo {
-  width: 100%;
-  aspect-ratio: 1;
-  background-image: url("/images/theater-contact-sheet.png");
-  background-repeat: no-repeat;
-  background-size: 300% 300%;
-  background-color: #827f8d;
-}
-.hero-polaroid .contact-photo {
-  aspect-ratio: 1.45;
-  background-size: 300% 435%;
-}
 .polaroid-caption {
   display: block;
   padding-top: 16px;
@@ -785,52 +773,169 @@ button:focus-visible .photo-expand {
   padding-bottom: 0;
   background: var(--paper);
 }
-.process-grid {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr 1fr;
-  gap: 27px;
-  align-items: start;
-}
-.process-photo {
+.hero-process-photo {
   display: block;
-  padding: 0;
+  width: 100%;
+  height: auto;
+}
+.process-mural {
+  columns: 3;
+  column-gap: 30px;
+  padding: 8px 6px;
+}
+.process-card {
+  display: inline-block;
+  vertical-align: top;
+  break-inside: avoid;
+  width: 100%;
+  padding: 10px 10px 16px;
+  margin: 0 0 30px;
   border: 0;
   text-align: left;
-  background: transparent;
+  background: #fffefa;
+  box-shadow: 0 3px 12px #28245212;
+  transform: rotate(-1deg);
 }
-.process-image-wrap {
+.process-card:nth-child(3n + 2) {
+  transform: rotate(1deg);
+}
+.process-card:nth-child(3n) {
+  transform: rotate(-0.4deg);
+}
+.process-card-image {
   display: block;
   position: relative;
-  overflow: hidden;
+  background: var(--mist);
 }
-.process-photo-1 {
-  padding-top: 35px;
+.process-card-image img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
-.process-photo-2 {
-  padding-top: 70px;
+.process-play {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border: 1px solid #ffffffb3;
+  border-radius: 50%;
+  background: #282452cc;
+  color: white;
 }
-.process-photo .contact-photo {
-  transition: filter 200ms;
+.process-play svg {
+  width: 26px;
+  height: 26px;
+  margin-left: 3px;
+  fill: currentColor;
 }
-.process-photo:hover .contact-photo {
-  filter: sepia(0.1);
+.process-card:hover .process-play {
+  background: var(--ink);
 }
-.process-photo .photo-expand {
-  right: 14px;
-  bottom: 14px;
-}
-.process-photo-caption {
+.process-card-caption {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  margin-top: 18px;
-  font-size: 25px;
+  gap: 10px;
+  padding: 13px 4px 0;
+  font-size: 26px;
+  line-height: 1.1;
 }
-.process-photo-caption svg {
+.process-card-caption > svg {
+  flex-shrink: 0;
   width: 17px;
   height: 17px;
-  flex-shrink: 0;
+}
+.process-more {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+.process-more p {
+  font-size: 12px;
+  color: var(--muted);
+}
+.process-more-button {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+.program-dialog.gallery-dialog {
+  width: min(1000px, calc(100% - 32px));
+}
+.process-stage {
+  display: grid;
+  place-items: center;
+  padding: 58px 20px 0;
+}
+.process-viewer-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100dvh - 210px);
+  object-fit: contain;
+}
+.process-player {
+  display: block;
+  border: 0;
+  min-height: 200px;
+  background: #000;
+}
+.process-player-landscape {
+  width: min(100%, calc((100dvh - 210px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+}
+.process-player-portrait {
+  width: min(100%, calc((100dvh - 210px) * 9 / 16));
+  min-width: 200px;
+  aspect-ratio: 9 / 16;
+}
+.process-youtube-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+@media (max-width: 1000px) {
+  .process-mural {
+    columns: 2;
+    column-gap: 24px;
+  }
+}
+@media (max-width: 600px) {
+  .process-mural {
+    column-gap: 16px;
+  }
+  .process-card {
+    padding: 6px 6px 12px;
+    margin-bottom: 20px;
+  }
+  .process-card:first-child {
+    display: block;
+    column-span: all;
+    margin-bottom: 25px;
+  }
+  .process-card-caption {
+    padding: 11px 2px 0;
+    font-size: 21px;
+  }
+  .process-card-caption > svg {
+    width: 14px;
+    height: 14px;
+  }
+  .process-play {
+    width: 42px;
+    height: 42px;
+  }
+  .process-stage {
+    padding-inline: 12px;
+  }
 }
 .instagram-note {
   display: flex;
@@ -940,12 +1045,6 @@ button:focus-visible .photo-expand {
   right: 12px;
   z-index: 2;
   background: var(--paper);
-}
-.lightbox-photo {
-  aspect-ratio: 1;
-  max-height: calc(100dvh - 200px);
-  width: auto;
-  margin-inline: auto;
 }
 .lightbox-bottom {
   display: flex;
@@ -1259,12 +1358,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   .about-layout {
     gap: 65px;
   }
-  .process-grid {
-    gap: 22px;
-  }
-  .process-photo-caption {
-    font-size: 22px;
-  }
 }
 
 @media (max-width: 800px) {
@@ -1366,21 +1459,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   }
   .process-section {
     padding-bottom: 0;
-  }
-  .process-grid {
-    gap: 18px;
-  }
-  .process-photo-caption {
-    font-size: 21px;
-  }
-  .process-photo-caption svg {
-    display: none;
-  }
-  .process-photo-1 {
-    padding-top: 25px;
-  }
-  .process-photo-2 {
-    padding-top: 50px;
   }
   .instagram-note {
     gap: 12px;
@@ -1594,34 +1672,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
   .process-section {
     padding-bottom: 0;
   }
-  .process-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 28px 18px;
-  }
-  .process-photo-0 {
-    grid-column: 1 / -1;
-  }
-  .process-photo-0 .contact-photo {
-    aspect-ratio: 1.15;
-    background-size: 300% 345%;
-  }
-  .process-photo-1,
-  .process-photo-2 {
-    padding-top: 0;
-  }
-  .process-photo-2 {
-    margin-top: 24px;
-  }
-  .process-photo-caption {
-    font-size: 23px;
-    margin-top: 13px;
-  }
-  .process-photo-0 .process-photo-caption {
-    font-size: 28px;
-  }
-  .process-photo-0 .process-photo-caption svg {
-    display: block;
-  }
   .photo-expand {
     opacity: 1;
   }
@@ -1682,10 +1732,6 @@ body:has(.clock-dialog[open]) .seven-minute-timer {
     width: 33px;
     height: 33px;
     padding: 6px;
-  }
-  .lightbox-photo {
-    max-height: none;
-    width: 100%;
   }
   .info-dialog .dialog-content {
     padding: 40px 25px 30px;

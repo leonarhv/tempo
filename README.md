@@ -17,10 +17,10 @@ Open [localhost:3000](http://localhost:3000).
 
 ## Editing the program
 
-- `lib/program.ts`: synopsis, the 25-person roster, rehearsal captions, Instagram, and the
+- `lib/program.ts`: synopsis, the 25-person roster, Instagram, and the
   eventual Sympla ticket URL. All Instagram entries offer both `@cia.alea.t` and
   `@gatopingado_coletivo`, configured together in `program.instagrams`.
-- `components/digital-program.tsx`: sections, responsive menu, photo lightbox,
+- `components/digital-program.tsx`: sections, responsive menu, media lightbox,
   ticket buttons, and the invitation shown after the countdown.
 - `components/production-team.tsx`: a video-call-inspired roster, with two larger
   tiles for direction and assistant direction above the 23-person cast grid.
@@ -31,6 +31,15 @@ Open [localhost:3000](http://localhost:3000).
 - `lib/call-animations.ts`: the three local animation assets and their stills.
   Rebuild them from the generated sheets with `node scripts/build-call-gifs.mjs`
   (requires FFmpeg). No additional image generation is needed.
+- `lib/process-media.ts`: ordered process gallery, with five supplied photographs,
+  seven YouTube videos, and nine Shorts. The first seven entries appear initially;
+  **Ver mais do processo** reveals the rest. The hero uses the first real photo.
+- `components/process-gallery.tsx`: mixed photo/video mural and viewer. Only local
+  covers load in the mural. Opening a video mounts one YouTube privacy-enhanced
+  player with autoplay when opened directly or reached through gallery navigation;
+  switching media or closing the dialog removes it and stops playback.
+  Photos retain their full framing in the viewer. Use the buttons or keyboard
+  left/right arrows to move between media, and X or Escape to close.
 - `components/seven-minute-timer.tsx`: the fixed seven-minute countdown. It resets
   on page reload, uses elapsed wall-clock time to catch up after tab changes, and
   stops at `00:00`. Clicking the round clock enlarges it in the center of the
@@ -40,18 +49,38 @@ Open [localhost:3000](http://localhost:3000).
 - `components/theme-registry.tsx`: Material UI theme.
 
 The `@/*` import alias resolves from the project root. No database, authentication,
-analytics, remote image service, or API is configured.
+analytics, or API credentials are configured. Videos play through YouTube embeds.
 Until `ticketUrl` is supplied, the blue Sympla button reads **Ingressos em breve**
 and is disabled. Ticket buttons appear in the header and beside the dates and venue.
 After seven minutes, a dismissible invitation opens once per page visit. If a
-photo is open, the invitation waits until the photo dialog is closed. The same
+photo or video is open, the invitation waits until the gallery is closed. The same
 Sympla URL enables the invitation's ticket button when sales are available.
 
 The supplied poster is preserved unchanged, with a transparent lettering derivative
 used in the hero. Dates, times, and venue follow that
-artwork. Editorial copy and cast names use lorem ipsum. The generated photographs
-are explicitly illustrative and should be replaced before publication. See [asset notes](docs/assets.md)
+artwork. Editorial copy and cast names use lorem ipsum. The process photographs
+are supplied production images; the call avatars remain illustrative. See [asset notes](docs/assets.md)
 for the image generation prompt and font licenses.
+
+## Adding process media
+
+Edit `lib/process-media.ts`; the array order controls both the mural and the viewer.
+To add a photo, copy it into `public/images/process/` and add a `type: "photo"`
+entry with a unique `id`, `title`, `src`, descriptive `alt`, and its actual
+`width` and `height`. The `temp/` folder holds originals and is not served by the app.
+
+For a video or Short, add `video("YOUTUBE_ID", "landscape")` or
+`video("YOUTUBE_ID", "portrait")`, then download its cover once:
+
+```sh
+node scripts/download-process-poster.mjs YOUTUBE_ID portrait
+```
+
+Use `landscape` for a horizontal cover. The helper uses the Sharp image processor
+installed with Next.js. Include the generated WebP in the repository; the site
+does not call the YouTube API or fetch covers at build time. Unlisted videos work
+when embedding is allowed in YouTube. Anyone visiting the site can watch them
+and access their YouTube links.
 
 ## Commands
 

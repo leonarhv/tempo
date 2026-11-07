@@ -28,8 +28,16 @@ handwritten annotations. There are no animated section reveals.
   export when available.
 - `public/images/theater-contact-sheet.png`: generated using the built-in imagegen
   tool for this prototype. It contains six fictional portraits and three fictional
-  rehearsal photographs. The page currently uses only the rehearsal photographs
-  as CSS crops. These generated images are not photographs of the actual production.
+  rehearsal photographs. Retained as a draft source; no longer displayed on the page.
+- `public/images/process/`: five real production photographs copied unchanged from
+  the user's `temp/` folder, with descriptive filenames. The first group rehearsal
+  photo also replaces the illustrative hero photograph. Their original colors
+  and framing are preserved.
+- `public/images/process/youtube/`: local WebP covers for the 16 supplied YouTube
+  videos and Shorts, downloaded from each video's public YouTube thumbnail.
+  Landscape covers remove the thumbnail's top/bottom letterboxing; Shorts use
+  the central portrait area. Playback uses the original, unmodified YouTube videos.
+  `scripts/download-process-poster.mjs` prepares a cover for a new video.
 - `public/images/call/`: three illustrative looping GIFs and their still posters,
   repeated across the roster. The people are fictional placeholders. The image
   sequences were created with built-in imagegen and assembled locally with FFmpeg.

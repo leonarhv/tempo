@@ -2,32 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { processPhotos, program } from "@/lib/program";
+import { program } from "@/lib/program";
+import { heroProcessPhoto, processMedia } from "@/lib/process-media";
+import { ProcessMural, ProcessViewer } from "@/components/process-gallery";
 import { ProductionTeam } from "@/components/production-team";
 import { Icon } from "@/components/icons";
 import { SymplaLogo } from "@/components/sympla-logo";
 import { SevenMinuteTimer } from "@/components/seven-minute-timer";
 
 type Modal = "gallery" | "instagram" | null;
-
-function Photo({
-  position,
-  alt,
-  className = "",
-}: {
-  position: string;
-  alt: string;
-  className?: string;
-}) {
-  return (
-    <div
-      role="img"
-      aria-label={alt}
-      className={`contact-photo ${className}`}
-      style={{ backgroundPosition: position }}
-    />
-  );
-}
 
 function TicketButton({
   small = false,
@@ -76,9 +59,9 @@ export function DigitalProgram() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [modal, setModal] = useState<Modal>(null);
   const [reminderPending, setReminderPending] = useState(false);
-  const [photoIndex, setPhotoIndex] = useState(0);
+  const [mediaIndex, setMediaIndex] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  // Finish the current photo or dialog before showing the invitation.
+  // Finish the current media or dialog before showing the invitation.
   const activeModal = modal ?? (reminderPending ? "tickets" : null);
   const handleCountdownElapsed = useCallback(
     () => setReminderPending(true),
@@ -96,12 +79,12 @@ export function DigitalProgram() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
         event.preventDefault();
-        setPhotoIndex(
+        setMediaIndex(
           (index) =>
             (index +
               (event.key === "ArrowRight" ? 1 : -1) +
-              processPhotos.length) %
-            processPhotos.length,
+              processMedia.length) %
+            processMedia.length,
         );
       }
     }
@@ -121,8 +104,8 @@ export function DigitalProgram() {
     }
   }
 
-  function openPhoto(index: number) {
-    setPhotoIndex(index);
+  function openMedia(index: number) {
+    setMediaIndex(index);
     setModal("gallery");
   }
 
@@ -196,13 +179,17 @@ export function DigitalProgram() {
               </span>
               <button
                 className="hero-polaroid"
-                onClick={() => openPhoto(0)}
-                aria-label="Ampliar imagem ilustrativa do nosso processo"
+                onClick={() => openMedia(0)}
+                aria-label="Ampliar foto do nosso processo"
               >
                 <span className="tape" aria-hidden="true" />
-                <Photo
-                  position={processPhotos[0].position}
-                  alt={processPhotos[0].alt}
+                <Image
+                  className="hero-process-photo"
+                  src={heroProcessPhoto.src}
+                  alt={heroProcessPhoto.alt}
+                  width={heroProcessPhoto.width}
+                  height={heroProcessPhoto.height}
+                  sizes="(max-width: 600px) 80vw, 405px"
                 />
                 <span className="handwritten polaroid-caption">
                   lorem ipsum dolor sit amet
@@ -307,39 +294,10 @@ export function DigitalProgram() {
           <div className="page-width">
             <div className="section-heading">
               <div>
-                <span className="section-note handwritten">
-                  Lorem ipsum dolor sit amet
-                </span>
-                <h2 id="process-title">Lorem ipsum sit amet.</h2>
+                <h2 id="process-title">Nosso processo</h2>
               </div>
-              <p>
-                Lorem ipsum dolor sit amet,
-                <br />
-                consectetur adipiscing elit.
-              </p>
             </div>
-            <div className="process-grid">
-              {processPhotos.map((photo, index) => (
-                <button
-                  className={`process-photo process-photo-${index}`}
-                  onClick={() => openPhoto(index)}
-                  key={photo.title}
-                  aria-label={`Ampliar: ${photo.title}`}
-                >
-                  <span className="process-image-wrap">
-                    <Photo position={photo.position} alt={photo.alt} />
-                    <span className="photo-expand">
-                      <Icon name="expand" />
-                    </span>
-                  </span>
-                  <span className="process-photo-caption">
-                    <span className="handwritten">{photo.title}</span>
-                    <Icon name="arrow" />
-                  </span>
-                </button>
-              ))}
-            </div>
-            <p className="draft-caption">Imagens de ensaio ilustrativas.</p>
+            <ProcessMural onOpen={openMedia} />
             <div className="instagram-note">
               <Icon name="instagram" />
               <p>Siga nossos coletivos no Instagram</p>
@@ -396,51 +354,16 @@ export function DigitalProgram() {
             <Icon name="close" />
           </button>
           {activeModal === "gallery" ? (
-            <>
-              <h2 id="dialog-title" className="visually-hidden">
-                {processPhotos[photoIndex].title}
-              </h2>
-              <Photo
-                className="lightbox-photo"
-                position={processPhotos[photoIndex].position}
-                alt={processPhotos[photoIndex].alt}
-              />
-              <div className="lightbox-bottom">
-                <div aria-live="polite">
-                  <p className="handwritten">
-                    {processPhotos[photoIndex].title}
-                  </p>
-                  <p>{processPhotos[photoIndex].caption}</p>
-                  <small>
-                    Imagem ilustrativa · {photoIndex + 1} de{" "}
-                    {processPhotos.length}
-                  </small>
-                </div>
-                <div className="gallery-controls">
-                  <button
-                    className="icon-button previous-photo"
-                    aria-label="Foto anterior"
-                    onClick={() =>
-                      setPhotoIndex(
-                        (photoIndex + processPhotos.length - 1) %
-                          processPhotos.length,
-                      )
-                    }
-                  >
-                    <Icon name="chevron" />
-                  </button>
-                  <button
-                    className="icon-button"
-                    aria-label="Próxima foto"
-                    onClick={() =>
-                      setPhotoIndex((photoIndex + 1) % processPhotos.length)
-                    }
-                  >
-                    <Icon name="chevron" />
-                  </button>
-                </div>
-              </div>
-            </>
+            <ProcessViewer
+              media={processMedia[mediaIndex]}
+              index={mediaIndex}
+              onNavigate={(direction) =>
+                setMediaIndex(
+                  (index) =>
+                    (index + direction + processMedia.length) % processMedia.length,
+                )
+              }
+            />
           ) : activeModal === "tickets" ? (
             <>
               <span className="handwritten ticket-reminder-note">
