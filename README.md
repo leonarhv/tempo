@@ -22,8 +22,11 @@ Open [localhost:3000](http://localhost:3000).
   `@gatopingado_coletivo`, configured together in `program.instagrams`.
 - `components/digital-program.tsx`: sections, responsive menu, media lightbox,
   ticket buttons, and the invitation shown after the countdown.
-- `components/production-team.tsx`: a video-call-inspired roster, with two larger
-  tiles for direction and assistant direction above the 23-person cast grid.
+- `components/production-team.tsx`: a video-call-inspired roster, with three larger
+  tiles for direction and two assistant directors above the 22-person cast grid.
+  Direction occupies the larger tile on the left, with both assistants stacked
+  on the right. On mobile, direction appears first in a taller tile, followed
+  by the two assistants. The cast grid remains below them.
   Names use lorem ipsum, except Alan Silva. His `pixelated: true` tile displays
   an abstract pixel mosaic and **Conexão ruim**, without loading a photo or GIF,
   even if one is later assigned. Three illustrative GIFs are reused across the roster,

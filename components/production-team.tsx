@@ -54,7 +54,9 @@ function CallParticipant({
             fill
             sizes={
               featured
-                ? "(max-width: 600px) 90vw, 45vw"
+                ? person.role === "Direção"
+                  ? "(max-width: 600px) 90vw, 60vw"
+                  : "(max-width: 600px) 90vw, 30vw"
                 : "(max-width: 600px) 42vw, (max-width: 1000px) 22vw, 180px"
             }
           />

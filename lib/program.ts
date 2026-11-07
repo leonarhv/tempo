@@ -48,13 +48,20 @@ export const productionTeam: ProductionMember[] = [
     animation: callAnimations[1],
   },
   {
+    id: "assistencia-direcao-2",
+    name: "Lorem ipsum",
+    role: "Assistência de direção",
+    photo: null,
+    animation: callAnimations[2],
+  },
+  {
     id: "alan-silva",
     name: "Alan Silva",
     role: "Elenco",
     photo: null,
     pixelated: true,
   },
-  ...Array.from({ length: 22 }, (_, index) => ({
+  ...Array.from({ length: 21 }, (_, index) => ({
     id: `elenco-${index + 1}`,
     name: "Lorem ipsum",
     role: "Elenco" as const,
