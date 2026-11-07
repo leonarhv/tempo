@@ -61,6 +61,25 @@ for the image generation prompt and font licenses.
 - `npm run lint`: run ESLint.
 - `npm run typecheck`: generate route types and check TypeScript.
 
+## Social previews
+
+`app/layout.tsx` sets the full play title, performance dates and times, venue,
+Open Graph tags, and a Twitter large-image card. The supplied
+`Sonhar com Você - André Haidamus.jpg` is served unchanged at
+`/images/tempo-og.jpg`, including its original aspect ratio and all lettering.
+
+The canonical URL, `og:url`, `og:image`, and `twitter:image` use the public origin
+`https://tempo.nomacu.com` by default. `NEXT_PUBLIC_SITE_URL` can override it before
+building if the domain changes; see `.env.example`.
+Social crawlers must be able to access the published page and image
+without authentication; localhost cannot provide remote link previews.
+
+The page emits metadata in its initial HTML. Each app controls how it displays
+and caches a link preview. After updating an already-shared URL, use the platform's
+refresh/debug tool if its old preview remains cached.
+
+Reference: [Open Graph protocol](https://ogp.me/).
+
 ## npm registry
 
 The project `.npmrc` explicitly sets `https://registry.npmjs.org/` as the registry.

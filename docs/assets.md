@@ -11,6 +11,10 @@ handwritten annotations. There are no animated section reveals.
 
 ## Images
 
+- `public/images/tempo-og.jpg`: an unchanged copy of the supplied root image
+  `Sonhar com Você - André Haidamus.jpg` (958 × 635). It is used for Open Graph and
+  Twitter Card previews. No AI generation, cropping, or recompression was applied.
+
 - `public/images/tempo-header.svg`: cropped from the user's `Design A4.svg`.
   The A4 canvas and white cover shapes were removed, with an SVG mask and clip
   preserving only the original Tempo lettering on a transparent background.
