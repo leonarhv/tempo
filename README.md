@@ -18,7 +18,7 @@ Open [localhost:3000](http://localhost:3000).
 ## Editing the program
 
 - `lib/program.ts`: synopsis, the 25-person roster, Instagram, and the
-  eventual Sympla ticket URL. All Instagram entries offer both `@cia.alea.t` and
+  Sympla ticket URL. All Instagram entries offer both `@cia.alea.t` and
   `@gatopingado_coletivo`, configured together in `program.instagrams`.
 - `components/digital-program.tsx`: sections, responsive menu, media lightbox,
   ticket buttons, and the invitation shown after the countdown.
@@ -63,7 +63,7 @@ Sympla URL enables the invitation's ticket button when sales are available.
 
 The supplied poster is preserved unchanged, with a transparent lettering derivative
 used in the hero. Dates, times, and venue follow that
-artwork. Editorial copy and cast names use lorem ipsum. The process photographs
+artwork. Some cast names use lorem ipsum. The process photographs
 are supplied production images; the call avatars remain illustrative. See [asset notes](docs/assets.md)
 for the image generation prompt and font licenses.
 

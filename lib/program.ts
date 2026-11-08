@@ -1,6 +1,5 @@
 import { callAnimations, type CallAnimation } from "@/lib/call-animations";
 
-// Draft content only. Replace the illustrative copy, people, and images here.
 // Dates, times, venue, and the title are taken from the supplied visual identity.
 export const program = {
   title: "Tempo",
@@ -12,13 +11,15 @@ export const program = {
       url: "https://www.instagram.com/gatopingado_coletivo/",
     },
   ],
-  ticketUrl: null as string | null,
+  ticketUrl:
+    "https://nomacu.com/r/t/de81f104-51b1-4533-93bc-ff8e687b210f?utm_source=tempo" as string | null,
   venue: "Teatro Escola Macunaíma",
   room: "Teatro 4",
   synopsis: [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt?",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "Um instante pode conter muito mais do que o relógio é capaz de medir.",
+    "Como em um sonho, cotidiano e imaginário se sobrepõem, criando metáforas que nos permitem dizer o que nem sempre cabe em palavras (e a gente ama metáforas).",
+    "Inspirada pela obra Velocidade, do grupo Quatroloscinco, de Belo Horizonte/MG, a encenação nasce da pesquisa sobre Tempo e Presença e investiga outras maneiras de experimentar o tempo diante da aceleração da vida contemporânea.",
+    "Entre urgências e desvios, somos desafiados a lidar com a pressa de chegar ao futuro e a permanecer no instante enquanto ele acontece, como em um sonho lúcido.",
   ],
 };
 

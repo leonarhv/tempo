@@ -245,13 +245,7 @@ export function DigitalProgram() {
           <div className="page-width about-layout">
             <div className="about-heading">
               <span className="section-note handwritten">Sobre a peça</span>
-              <h2 id="about-title">
-                Lorem ipsum
-                <br />
-                dolor sit
-                <br />
-                amet.
-              </h2>
+              <h2 id="about-title">Como sonhar outros tempos?</h2>
               <svg
                 className="scribbled-line"
                 viewBox="0 0 270 20"
@@ -276,7 +270,7 @@ export function DigitalProgram() {
                 </p>
               ))}
               <p className="handwritten synopsis-signature">
-                Não é intuitivo.
+                Te esperamos em nossos sonhos.
               </p>
             </div>
           </div>
