@@ -1,5 +1,3 @@
-import { callAnimations, type CallAnimation } from "@/lib/call-animations";
-
 // Dates, times, venue, and the title are taken from the supplied visual identity.
 export const program = {
   title: "Tempo",
@@ -12,7 +10,9 @@ export const program = {
     },
   ],
   ticketUrl:
-    "https://nomacu.com/r/t/de81f104-51b1-4533-93bc-ff8e687b210f?utm_source=tempo" as string | null,
+    "https://nomacu.com/r/t/de81f104-51b1-4533-93bc-ff8e687b210f?utm_source=tempo" as
+      | string
+      | null,
   venue: "Teatro Escola Macunaíma",
   room: "Teatro 4",
   synopsis: [
@@ -28,32 +28,56 @@ export type ProductionMember = {
   name: string;
   role: "Direção" | "Assistência de direção" | "Elenco";
   photo: string | null;
-  animation?: CallAnimation;
+  animation?: {
+    src: string;
+    poster: string;
+    alt: string;
+  };
   pixelated?: boolean;
 };
 
-// Add each person's name and a local /images/... photo path when available.
+const castNames = [
+  "Ana Dâmaso",
+  "Ana Sol",
+  "Daniela Ancesque",
+  "Diego Castro",
+  "Felipe Fonseca",
+  "Fernanda Eler",
+  "Gabriel Williams",
+  "Gui Yabiku",
+  "Gustavo Candido",
+  "Íris Mota",
+  "João Vitor Medeiros",
+  "Júlia Leite",
+  "Leonardo Vieira",
+  "Letizia Pitol Zanuso",
+  "Lisandra Pingo",
+  "Mabi Martinhos",
+  "Murillo Navarro",
+  "Nádia Rosa",
+  "Sam Fernandes",
+  "Sofia Donadelli",
+];
+
+// Use local /images/... photo paths when available.
 export const productionTeam: ProductionMember[] = [
   {
     id: "direcao",
-    name: "Lorem ipsum",
+    name: "André Haidamus",
     role: "Direção",
-    photo: null,
-    animation: callAnimations[0],
+    photo: "/images/call/andre-haidamus.webp",
   },
   {
     id: "assistencia-direcao",
-    name: "Lorem ipsum",
+    name: "Ana Macário",
     role: "Assistência de direção",
-    photo: null,
-    animation: callAnimations[1],
+    photo: "/images/call/ana-macario.webp",
   },
   {
     id: "assistencia-direcao-2",
-    name: "Lorem ipsum",
+    name: "Laís Marques",
     role: "Assistência de direção",
     photo: null,
-    animation: callAnimations[2],
   },
   {
     id: "alan-silva",
@@ -62,11 +86,18 @@ export const productionTeam: ProductionMember[] = [
     photo: null,
     pixelated: true,
   },
-  ...Array.from({ length: 21 }, (_, index) => ({
+  ...castNames.map((name, index) => ({
     id: `elenco-${index + 1}`,
-    name: "Lorem ipsum",
+    name,
     role: "Elenco" as const,
     photo: null,
-    animation: callAnimations[(index + 2) % callAnimations.length],
+    animation:
+      name === "Ana Sol"
+        ? {
+            src: "/images/call/ana-sol.gif",
+            poster: "/images/call/ana-sol-poster.png",
+            alt: "Retrato de Ana Sol",
+          }
+        : undefined,
   })),
 ];

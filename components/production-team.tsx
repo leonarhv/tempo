@@ -27,13 +27,8 @@ function CallParticipant({
   featured?: boolean;
   motionPaused?: boolean;
 }) {
-  const initials = person.name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
+  const [initial] = person.name.trim();
+  const cameraOff = !person.pixelated && !person.animation;
 
   return (
     <li
@@ -47,19 +42,6 @@ function CallParticipant({
       <figure>
         {person.pixelated ? (
           <PixelatedPortrait name={person.name} />
-        ) : person.photo ? (
-          <Image
-            src={person.photo}
-            alt={`Retrato de ${person.name}`}
-            fill
-            sizes={
-              featured
-                ? person.role === "Direção"
-                  ? "(max-width: 600px) 90vw, 60vw"
-                  : "(max-width: 600px) 90vw, 30vw"
-                : "(max-width: 600px) 42vw, (max-width: 1000px) 22vw, 180px"
-            }
-          />
         ) : person.animation ? (
           <picture>
             <source
@@ -76,12 +58,21 @@ function CallParticipant({
             />
           </picture>
         ) : (
-          <div
-            className="call-avatar"
-            role="img"
-            aria-label={`Foto de ${person.role.toLowerCase()} a adicionar`}
-          >
-            <span>{initials}</span>
+          <div className="call-avatar" aria-hidden="true">
+            <span className="call-avatar-circle">
+              {person.photo ? (
+                <Image
+                  src={person.photo}
+                  alt=""
+                  fill
+                  sizes={
+                    featured ? "(max-width: 600px) 28vw, 200px" : "90px"
+                  }
+                />
+              ) : (
+                initial?.toUpperCase()
+              )}
+            </span>
           </div>
         )}
         {featured && (
@@ -89,7 +80,13 @@ function CallParticipant({
             <Icon name="push-pin" />
           </span>
         )}
-        <span className="call-muted" aria-hidden="true">
+        <span className="call-device-status">
+          {cameraOff && (
+            <>
+              <Icon name="video-off" />
+              <span className="visually-hidden">Câmera desligada</span>
+            </>
+          )}
           <Icon name="mic-off" />
         </span>
         <figcaption className="call-participant-caption">

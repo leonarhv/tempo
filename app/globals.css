@@ -676,11 +676,13 @@ button:focus-visible .photo-expand {
   place-items: center;
   padding-bottom: 22px;
 }
-.call-avatar > span {
+.call-avatar-circle {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 39%;
+  width: min(39%, 90px);
   aspect-ratio: 1;
+  overflow: hidden;
   border-radius: 50%;
   color: #292337;
   background: var(--avatar-color);
@@ -688,11 +690,14 @@ button:focus-visible .photo-expand {
   font-weight: 500;
   letter-spacing: -1px;
 }
+.call-avatar-circle img {
+  object-position: center 40%;
+}
 .call-participant-featured .call-avatar {
   padding-bottom: 10px;
 }
-.call-participant-featured .call-avatar > span {
-  width: 29%;
+.call-participant-featured .call-avatar-circle {
+  width: min(29%, 200px);
   font-size: clamp(30px, 4.8vw, 58px);
 }
 .call-participant-caption {
@@ -724,7 +729,7 @@ button:focus-visible .photo-expand {
 .call-participant-featured .call-participant-caption > span {
   font-size: 11px;
 }
-.call-muted,
+.call-device-status,
 .call-pinned {
   position: absolute;
   top: 8px;
@@ -736,23 +741,33 @@ button:focus-visible .photo-expand {
   color: #eee8f6;
   background: #272231a6;
 }
-.call-muted {
+.call-device-status {
   right: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  width: auto;
+  min-width: 25px;
+  padding-inline: 5px;
+  border-radius: 100px;
 }
 .call-pinned {
   left: 10px;
   color: #dfd0f4;
 }
-.call-muted svg,
+.call-device-status svg,
 .call-pinned svg {
   width: 14px;
   height: 14px;
 }
-.call-participant-featured .call-muted,
+.call-participant-featured .call-device-status,
 .call-participant-featured .call-pinned {
   top: 11px;
-  width: 30px;
+  min-width: 30px;
   height: 30px;
+}
+.call-participant-featured .call-pinned {
+  width: 30px;
 }
 
 @media (max-width: 1000px) {
@@ -787,10 +802,10 @@ button:focus-visible .photo-expand {
     grid-row: auto;
     aspect-ratio: 16 / 10;
   }
-  .call-participant-featured .call-avatar > span {
+  .call-participant-featured .call-avatar-circle {
     font-size: 40px;
   }
-  .call-avatar > span {
+  .call-avatar-circle {
     font-size: 24px;
   }
 }

@@ -91,9 +91,9 @@ grid boundaries must be exactly at one-third and two-thirds, nine equally sized
 photos filling the whole image. This is illustrative prototype imagery, not real
 cast documentation.
 
-## Call animation prompts
+## Prototype call animation prompts
 
-Only three generated people are used:
+The prototype used three generated portraits:
 
 - `wave-glasses`: Brazilian man in his forties, medium brown skin, short dark hair
   graying at the temples, beard, round glasses, charcoal shirt; a small hand wave.

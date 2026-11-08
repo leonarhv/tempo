@@ -17,25 +17,21 @@ Open [localhost:3000](http://localhost:3000).
 
 ## Editing the program
 
-- `lib/program.ts`: synopsis, the 25-person roster, Instagram, and the
+- `lib/program.ts`: synopsis, the 24-person roster, Instagram, and the
   Sympla ticket URL. All Instagram entries offer both `@cia.alea.t` and
   `@gatopingado_coletivo`, configured together in `program.instagrams`.
 - `components/digital-program.tsx`: sections, responsive menu, media lightbox,
   ticket buttons, and the invitation shown after the countdown.
 - `components/production-team.tsx`: a video-call-inspired roster, with three larger
-  tiles for direction and two assistant directors above the 22-person cast grid.
+  tiles for direction and two assistant directors above the 21-person cast grid.
   Direction occupies the larger tile on the left, with both assistants stacked
   on the right. On mobile, direction appears first in a taller tile, followed
   by the two assistants. The cast grid remains below them.
-  Names use lorem ipsum, except Alan Silva. His `pixelated: true` tile displays
-  an abstract pixel mosaic and **Conexão ruim**, without loading a photo or GIF,
-  even if one is later assigned. Three illustrative GIFs are reused across the roster,
-  with different loop lengths. The call header can pause all movements; reduced
-  motion preferences show still posters. Real `photo` values take precedence.
-  Set each member's `name` and `photo` in `productionTeam` to populate the program.
-- `lib/call-animations.ts`: the three local animation assets and their stills.
-  Rebuild them from the generated sheets with `node scripts/build-call-gifs.mjs`
-  (requires FFmpeg). No additional image generation is needed.
+  Cards without a portrait show the first letter of the displayed name.
+  Alan Silva's `pixelated: true` tile displays
+  an abstract pixel mosaic and **Conexão ruim**. Ana Sol's GIF switches to a
+  still frame when motion is paused or reduced. Edit `castNames` for the cast
+  roster and `productionTeam` for direction and individual tile settings.
 - `lib/process-media.ts`: ordered process gallery, with five supplied photographs,
   seven YouTube videos, and nine Shorts. The first seven entries appear initially;
   **Ver mais do processo** reveals the rest. The hero uses the first real photo.
@@ -63,9 +59,8 @@ Sympla URL enables the invitation's ticket button when sales are available.
 
 The supplied poster is preserved unchanged, with a transparent lettering derivative
 used in the hero. Dates, times, and venue follow that
-artwork. Some cast names use lorem ipsum. The process photographs
-are supplied production images; the call avatars remain illustrative. See [asset notes](docs/assets.md)
-for the image generation prompt and font licenses.
+artwork. The process photographs are supplied production images. See
+[asset notes](docs/assets.md) for the image generation prompt and font licenses.
 
 ## Adding process media
 

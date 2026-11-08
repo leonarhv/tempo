@@ -7,6 +7,7 @@ type IconName =
   | "pin"
   | "clock"
   | "video"
+  | "video-off"
   | "mic-off"
   | "connection-poor"
   | "push-pin"
@@ -36,6 +37,9 @@ export function Icon({
         <rect x="3" y="6" width="12" height="12" rx="2" />
         <path d="m15 10 6-3v10l-6-3" />
       </>
+    ),
+    "video-off": (
+      <path d="M3 3l18 18M10 6h3a2 2 0 0 1 2 2v2l6-3v9M3 8v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1" />
     ),
     "mic-off": (
       <>
