@@ -59,6 +59,12 @@ const castMembers: [name: string, portraitFile?: string][] = [
   ["Sofia Donadelli", "sofia-donadelli.webp"],
 ];
 
+const castAnimations: Partial<Record<string, string>> = {
+  "Ana Sol": "ana-sol",
+  "Leonardo Vieira": "leonardo-vieira",
+  "Mabi Martinhos": "mabi-martinhos",
+};
+
 // Use local /images/... photo paths when available.
 export const productionTeam: ProductionMember[] = [
   {
@@ -86,18 +92,21 @@ export const productionTeam: ProductionMember[] = [
     photo: null,
     pixelated: true,
   },
-  ...castMembers.map(([name, portraitFile], index) => ({
-    id: `elenco-${index + 1}`,
-    name,
-    role: "Elenco" as const,
-    photo: portraitFile ? `/images/call/${portraitFile}` : null,
-    animation:
-      name === "Ana Sol"
+  ...castMembers.map(([name, portraitFile], index): ProductionMember => {
+    const animationName = castAnimations[name];
+
+    return {
+      id: `elenco-${index + 1}`,
+      name,
+      role: "Elenco",
+      photo: portraitFile ? `/images/call/${portraitFile}` : null,
+      animation: animationName
         ? {
-            src: "/images/call/ana-sol.gif",
-            poster: "/images/call/ana-sol-poster.png",
-            alt: "Retrato de Ana Sol",
+            src: `/images/call/${animationName}.gif`,
+            poster: `/images/call/${animationName}-poster.png`,
+            alt: `Retrato de ${name}`,
           }
         : undefined,
-  })),
+    };
+  }),
 ];

@@ -29,9 +29,9 @@ Open [localhost:3000](http://localhost:3000).
   by the two assistants. The cast grid remains below them.
   Cards without a portrait show the first letter of the displayed name.
   Alan Silva's `pixelated: true` tile displays
-  an abstract pixel mosaic and **Conexão ruim**. Ana Sol's GIF switches to a
-  still frame when motion is paused or reduced. Edit `castMembers` for the cast
-  roster and `productionTeam` for direction and individual tile settings.
+  an abstract pixel mosaic and **Conexão ruim**. GIFs switch to a still frame
+  when motion is paused or reduced. Edit `castMembers` for the cast roster,
+  `castAnimations` for GIFs, and `productionTeam` for direction and tile settings.
 - `lib/process-media.ts`: ordered process gallery, with five supplied photographs,
   seven YouTube videos, and nine Shorts. The first seven entries appear initially;
   **Ver mais do processo** reveals the rest. The hero uses the first real photo.
