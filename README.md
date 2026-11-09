@@ -30,7 +30,7 @@ Open [localhost:3000](http://localhost:3000).
   Cards without a portrait show the first letter of the displayed name.
   Alan Silva's `pixelated: true` tile displays
   an abstract pixel mosaic and **Conexão ruim**. Ana Sol's GIF switches to a
-  still frame when motion is paused or reduced. Edit `castNames` for the cast
+  still frame when motion is paused or reduced. Edit `castMembers` for the cast
   roster and `productionTeam` for direction and individual tile settings.
 - `lib/process-media.ts`: ordered process gallery, with five supplied photographs,
   seven YouTube videos, and nine Shorts. The first seven entries appear initially;

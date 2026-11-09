@@ -36,27 +36,27 @@ export type ProductionMember = {
   pixelated?: boolean;
 };
 
-const castNames = [
-  "Ana Dâmaso",
-  "Ana Sol",
-  "Daniela Ancesque",
-  "Diego Castro",
-  "Felipe Fonseca",
-  "Fernanda Eler",
-  "Gabriel Williams",
-  "Gui Yabiku",
-  "Gustavo Candido",
-  "Íris Mota",
-  "João Vitor Medeiros",
-  "Júlia Leite",
-  "Leonardo Vieira",
-  "Letizia Pitol Zanuso",
-  "Lisandra Pingo",
-  "Mabi Martinhos",
-  "Murillo Navarro",
-  "Nádia Rosa",
-  "Sam Fernandes",
-  "Sofia Donadelli",
+const castMembers: [name: string, portraitFile?: string][] = [
+  ["Ana Dâmaso", "ana-damaso.webp"],
+  ["Ana Sol"],
+  ["Daniela Ancesque", "daniela-ancesque.webp"],
+  ["Diego Castro", "diego-castro.webp"],
+  ["Felipe Fonseca", "felipe-fonseca.webp"],
+  ["Fernanda Eler", "fernanda-eler.webp"],
+  ["Gabriel Williams", "gabriel-williams.webp"],
+  ["Gui Yabiku", "gui-yabiku.webp"],
+  ["Gustavo Candido", "gustavo-candido.webp"],
+  ["Íris Mota", "iris-mota.webp"],
+  ["João Vitor Medeiros", "joao-vitor-medeiros.webp"],
+  ["Júlia Leite", "julia-leite.webp"],
+  ["Leonardo Vieira", "leonardo-vieira.webp"],
+  ["Letizia Pitol Zanuso", "letizia-pitol-zanuso.webp"],
+  ["Lisandra Pingo", "lisandra-pingo.webp"],
+  ["Mabi Martinhos", "mabi-martinhos.webp"],
+  ["Murillo Navarro", "murillo-navarro.webp"],
+  ["Nádia Rosa", "nadia-rosa.webp"],
+  ["Ian Fernandes", "ian-fernandes.webp"],
+  ["Sofia Donadelli", "sofia-donadelli.webp"],
 ];
 
 // Use local /images/... photo paths when available.
@@ -77,7 +77,7 @@ export const productionTeam: ProductionMember[] = [
     id: "assistencia-direcao-2",
     name: "Laís Marques",
     role: "Assistência de direção",
-    photo: null,
+    photo: "/images/call/lais-marques.webp",
   },
   {
     id: "alan-silva",
@@ -86,11 +86,11 @@ export const productionTeam: ProductionMember[] = [
     photo: null,
     pixelated: true,
   },
-  ...castNames.map((name, index) => ({
+  ...castMembers.map(([name, portraitFile], index) => ({
     id: `elenco-${index + 1}`,
     name,
     role: "Elenco" as const,
-    photo: null,
+    photo: portraitFile ? `/images/call/${portraitFile}` : null,
     animation:
       name === "Ana Sol"
         ? {
