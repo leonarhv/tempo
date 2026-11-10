@@ -61,6 +61,8 @@ const castMembers: [name: string, portraitFile?: string][] = [
 
 const castAnimations: Partial<Record<string, string>> = {
   "Ana Sol": "ana-sol",
+  "Diego Castro": "diego-castro",
+  "Ian Fernandes": "ian-fernandes",
   "Leonardo Vieira": "leonardo-vieira",
   "Mabi Martinhos": "mabi-martinhos",
 };
