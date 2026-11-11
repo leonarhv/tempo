@@ -364,16 +364,15 @@ export function DigitalProgram() {
               </span>
               <h2 id="dialog-title">Ainda está aí?</h2>
               <p id="ticket-reminder-message">
-                Então aproveita para comprar seu ingresso.
+                {program.ticketUrl
+                  ? "Então aproveita para comprar seu ingresso."
+                  : "As vendas abrem em breve."}
               </p>
               <TicketButton label="Comprar meu ingresso" />
               {!program.ticketUrl && (
-                <p className="ticket-reminder-availability">
-                  As vendas abrem em breve.
-                  <span className="instagram-profiles">
-                    <InstagramLinks className="instagram-profile-link" />
-                  </span>
-                </p>
+                <div className="ticket-reminder-availability instagram-profiles">
+                  <InstagramLinks className="instagram-profile-link" />
+                </div>
               )}
               <button
                 className="text-link ticket-reminder-dismiss"

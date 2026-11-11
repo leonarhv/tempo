@@ -9,10 +9,7 @@ export const program = {
       url: "https://www.instagram.com/gatopingado_coletivo/",
     },
   ],
-  ticketUrl:
-    "https://nomacu.com/r/t/de81f104-51b1-4533-93bc-ff8e687b210f?utm_source=tempo" as
-      | string
-      | null,
+  ticketUrl: null as string | null,
   venue: "Teatro Escola Macunaíma",
   room: "Teatro 4",
   synopsis: [
@@ -37,6 +34,7 @@ export type ProductionMember = {
 };
 
 const castMembers: [name: string, portraitFile?: string][] = [
+  ["Alan Silva"],
   ["Ana Dâmaso", "ana-damaso.webp"],
   ["Ana Sol"],
   ["Daniela Ancesque", "daniela-ancesque.webp"],
@@ -60,10 +58,15 @@ const castMembers: [name: string, portraitFile?: string][] = [
 ];
 
 const castAnimations: Partial<Record<string, string>> = {
+  "Alan Silva": "alan-silva",
   "Ana Sol": "ana-sol",
   "Diego Castro": "diego-castro",
+  "Felipe Fonseca": "felipe-fonseca",
+  "Gabriel Williams": "gabriel-williams",
   "Ian Fernandes": "ian-fernandes",
+  "Íris Mota": "iris-mota",
   "Leonardo Vieira": "leonardo-vieira",
+  "Letizia Pitol Zanuso": "letizia-pitol-zanuso",
   "Mabi Martinhos": "mabi-martinhos",
 };
 
@@ -86,13 +89,6 @@ export const productionTeam: ProductionMember[] = [
     name: "Laís Marques",
     role: "Assistência de direção",
     photo: "/images/call/lais-marques.webp",
-  },
-  {
-    id: "alan-silva",
-    name: "Alan Silva",
-    role: "Elenco",
-    photo: null,
-    pixelated: true,
   },
   ...castMembers.map(([name, portraitFile], index): ProductionMember => {
     const animationName = castAnimations[name];
