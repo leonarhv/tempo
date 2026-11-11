@@ -4,6 +4,7 @@
 /build/
 /coverage/
 /.vercel/
+/temp/
 .DS_Store
 *.pem
 npm-debug.log*
