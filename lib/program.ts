@@ -63,10 +63,13 @@ const castAnimations: Partial<Record<string, string>> = {
   "Diego Castro": "diego-castro",
   "Felipe Fonseca": "felipe-fonseca",
   "Gabriel Williams": "gabriel-williams",
+  "Gui Yabiku": "gui-yabiku",
   "Ian Fernandes": "ian-fernandes",
   "Íris Mota": "iris-mota",
+  "Júlia Leite": "julia-leite",
   "Leonardo Vieira": "leonardo-vieira",
   "Letizia Pitol Zanuso": "letizia-pitol-zanuso",
+  "Lisandra Pingo": "lisandra-pingo",
   "Mabi Martinhos": "mabi-martinhos",
 };
 
@@ -83,6 +86,11 @@ export const productionTeam: ProductionMember[] = [
     name: "Ana Macário",
     role: "Assistência de direção",
     photo: "/images/call/ana-macario.webp",
+    animation: {
+      src: "/images/call/ana-macario.gif",
+      poster: "/images/call/ana-macario-poster.png",
+      alt: "Retrato de Ana Macário",
+    },
   },
   {
     id: "assistencia-direcao-2",
