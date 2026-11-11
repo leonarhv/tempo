@@ -1,0 +1,224 @@
+.studio {
+  width: min(100% - 48px, 1040px);
+  margin-inline: auto;
+  padding-block: clamp(32px, 7vw, 80px);
+}
+
+.back {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.header {
+  margin-block: 22px 36px;
+}
+
+.header h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(44px, 7vw, 76px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.97;
+}
+
+.header p {
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+.workspace {
+  display: grid;
+  grid-template:
+    "preview settings" auto
+    "preview participants" auto
+    "preview actions" 1fr
+    / minmax(0, 1.2fr) minmax(0, 1fr);
+  column-gap: clamp(28px, 6vw, 76px);
+  row-gap: 26px;
+  padding-block-start: 30px;
+  border-top: 1px solid var(--line);
+}
+
+.settings {
+  grid-area: settings;
+  display: grid;
+  gap: 22px;
+}
+
+.participants { grid-area: participants; }
+.actions { grid-area: actions; }
+
+.participants p {
+  color: var(--muted);
+}
+
+.workspace fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.workspace legend {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.workspace legend span {
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.choices,
+.seats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.choice {
+  position: relative;
+}
+
+.choice > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.choice small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.choice input:checked + span {
+  border-color: var(--ink);
+  background: var(--mist);
+}
+
+.choice input:focus-visible + span,
+.seat select:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.choice input:disabled + span {
+  cursor: default;
+}
+
+.seat {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.seat select {
+  width: 100%;
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
+  font-size: 14px;
+}
+
+.preview {
+  grid-area: preview;
+  align-self: start;
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.vertical {
+  max-width: 350px;
+}
+
+.canvas {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  outline: 1px solid var(--line);
+  background: #3c3749;
+}
+
+.artwork,
+.portrait {
+  position: absolute;
+  display: block;
+}
+
+.artwork {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.portrait img {
+  object-fit: cover;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: start;
+  gap: 10px 16px;
+}
+
+.actions :global(.button):disabled {
+  opacity: 0.55;
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.actions progress {
+  width: min(100%, 140px);
+  accent-color: var(--ink);
+}
+
+.actions p {
+  width: 100%;
+  color: #812e4d;
+}
+
+@media (max-width: 700px) {
+  .workspace {
+    grid-template: "settings" "participants" "preview" "actions" / minmax(0, 1fr);
+  }
+
+  .preview {
+    max-width: 460px;
+  }
+
+  .vertical {
+    max-width: 272px;
+  }
+
+  .seat select {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 420px) {
+  .studio {
+    width: calc(100% - 32px);
+  }
+}
