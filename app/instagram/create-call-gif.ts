@@ -5,6 +5,7 @@ import { getPortrait, type CallLayout } from "./call-layout";
 
 const frameDelay = 80;
 const paletteSamples = 5;
+const exportWidth = 1080;
 
 function canvasContext(width: number, height: number, willReadFrequently = false) {
   const canvas = document.createElement("canvas");
@@ -28,7 +29,7 @@ async function loadImage(url: string) {
   return image;
 }
 
-async function loadArtwork(svg: SVGSVGElement) {
+async function loadArtwork(svg: SVGSVGElement, width: number, height: number) {
   const font = await (await fetchAsset("/fonts/manrope.ttf")).blob();
   const fontUrl = await new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -41,12 +42,14 @@ async function loadArtwork(svg: SVGSVGElement) {
   style.textContent = `@font-face { font-family: Manrope; src: url(${fontUrl}) format('truetype'); font-weight: 200 800; }`;
   svg.prepend(style);
   svg.style.fontFamily = "Manrope, Arial, sans-serif";
+  svg.setAttribute("width", String(width));
+  svg.setAttribute("height", String(height));
 
   const markup = new XMLSerializer().serializeToString(svg);
   const url = URL.createObjectURL(new Blob([markup], { type: "image/svg+xml" }));
   try {
     const image = await loadImage(url);
-    const overlay = canvasContext(Number(svg.getAttribute("width")), Number(svg.getAttribute("height")));
+    const overlay = canvasContext(width, height);
     overlay.drawImage(image, 0, 0);
     return overlay.canvas;
   } finally {
@@ -138,19 +141,26 @@ export async function createCallGif(
   svg: SVGSVGElement,
   onProgress: (progress: number) => void,
 ) {
+  const scale = exportWidth / width;
+  const exportHeight = Math.round(height * scale);
   const [overlay, tracks] = await Promise.all([
-    loadArtwork(svg),
+    loadArtwork(svg, exportWidth, exportHeight),
     Promise.all(cast.map((person, index) => loadTrack(person, tiles[index], featured))),
   ]);
   const portraits = tracks.filter((track) => track !== undefined);
-  const context = canvasContext(width, height, true);
+  const context = canvasContext(exportWidth, exportHeight, true);
+  context.scale(scale, scale);
+  context.imageSmoothingQuality = "high";
   const duration = Math.max(0, ...portraits.map((track) => track.duration));
 
   function renderFrame(time: number) {
-    context.fillStyle = "#3c3749";
-    context.fillRect(0, 0, width, height);
-    portraits.forEach((track) => drawPortrait(context, track.frameAt(time), track.box, track.verticalPosition));
-    context.drawImage(overlay, 0, 0);
+    context.clearRect(0, 0, width, height);
+    for (const { box, frameAt, verticalPosition } of portraits) {
+      context.fillStyle = "#3c3749";
+      context.fillRect(box.x, box.y, box.width, box.height);
+      drawPortrait(context, frameAt(time), box, verticalPosition);
+    }
+    context.drawImage(overlay, 0, 0, width, height);
   }
 
   // Sample the complete scene to keep one palette stable across the loop.
@@ -167,35 +177,32 @@ export async function createCallGif(
   }
 
   const frameCount = Math.max(1, Math.ceil(duration / frameDelay));
-  const palette = quantize(samples, frameCount > 1 ? 255 : 256);
+  const palette = quantize(samples, 255);
   const transparentIndex = palette.length;
-  const globalPalette = frameCount > 1 ? [...palette, [0, 0, 0]] : palette;
+  const globalPalette = [...palette, [0, 0, 0]];
   const encoder = GIFEncoder();
   let previous: Uint8Array | undefined;
 
   for (let frame = 0; frame < frameCount; frame += 1) {
     renderFrame(frame * frameDelay);
-    const pixels = context.getImageData(0, 0, width, height).data;
+    const pixels = context.getImageData(0, 0, exportWidth, exportHeight).data;
     const indexed = applyPalette(pixels, palette);
 
-    // Keep the previous canvas pixels under unchanged areas of the frame.
-    if (previous) {
-      for (let pixel = 0; pixel < indexed.length; pixel += 1) {
-        const color = indexed[pixel];
-        if (color === previous[pixel]) indexed[pixel] = transparentIndex;
-        else previous[pixel] = color;
-      }
-    } else if (frameCount > 1) {
-      previous = indexed.slice();
+    // The rounded corners stay transparent, and unchanged pixels reuse the previous frame.
+    for (let pixel = 0; pixel < indexed.length; pixel += 1) {
+      const color = pixels[pixel * 4 + 3] < 128 ? transparentIndex : indexed[pixel];
+      indexed[pixel] = previous?.[pixel] === color ? transparentIndex : color;
+      if (previous) previous[pixel] = color;
     }
+    if (frame === 0 && frameCount > 1) previous = indexed.slice();
 
-    encoder.writeFrame(indexed, width, height, {
+    encoder.writeFrame(indexed, exportWidth, exportHeight, {
       delay: frameDelay,
       palette: frame === 0 ? globalPalette : undefined,
       repeat: 0,
       dispose: 1,
-      transparent: frame > 0,
-      transparentIndex: frame > 0 ? transparentIndex : 0,
+      transparent: true,
+      transparentIndex,
     });
 
     if (frame % 4 === 0) {

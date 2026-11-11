@@ -17,17 +17,13 @@ export function getCallLayout(format: Format, group: Group) {
   const padding = 20;
   const headingHeight = 48;
   const gap = 14;
-  const windowX = 24;
-  const windowWidth = width - 2 * windowX;
-  const contentWidth = windowWidth - 2 * padding;
+  const contentWidth = width - 2 * padding;
+  const contentHeight = height - 2 * padding - headingHeight;
   const tileWidth = (contentWidth - (columns - 1) * gap) / columns;
-  const tileHeight = Math.round((tileWidth * 3) / 4);
+  const tileHeight = (contentHeight - gap) / 2;
   const featured = group === "direction";
-  const contentHeight = featured ? (format === "stories" ? 900 : 368) : 2 * tileHeight + gap;
-  const windowHeight = 2 * padding + headingHeight + contentHeight;
-  const windowY = (height - windowHeight) / 2;
-  const x = windowX + padding;
-  const y = windowY + padding + headingHeight;
+  const x = padding;
+  const y = padding + headingHeight;
 
   let tiles: Rectangle[];
   if (featured && format === "feed") {
@@ -40,7 +36,7 @@ export function getCallLayout(format: Format, group: Group) {
       { x: x + leadWidth + gap, y: y + sideHeight + gap, width: sideWidth, height: sideHeight },
     ];
   } else if (featured) {
-    const leadHeight = 360;
+    const leadHeight = Math.round(contentHeight * 0.4);
     const sideHeight = (contentHeight - leadHeight - 2 * gap) / 2;
     tiles = [
       { x, y, width: contentWidth, height: leadHeight },
@@ -59,8 +55,7 @@ export function getCallLayout(format: Format, group: Group) {
   return {
     width,
     height,
-    window: { x: windowX, y: windowY, width: windowWidth, height: windowHeight },
-    heading: { x, y: windowY + padding },
+    heading: { x, y: padding },
     featured,
     tiles,
   };

@@ -81,8 +81,7 @@ export function CallPreview({
         </defs>
 
         <g mask={`url(#${maskId})`}>
-          <rect width={width} height={height} fill="#ebe7f3" />
-          <rect {...layout.window} rx="22" fill="#282533" stroke="#4b435e" strokeWidth="2" />
+          <rect x="1" y="1" width={width - 2} height={height - 2} rx="22" fill="#282533" stroke="#4b435e" strokeWidth="2" />
           {tiles.map((tile, index) => (
             <rect key={index} {...tile} rx={tileRadius} fill={featured ? "#433b54" : "#3c3749"} />
           ))}
