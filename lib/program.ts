@@ -59,11 +59,14 @@ const castMembers: [name: string, portraitFile?: string][] = [
 
 const castAnimations: Partial<Record<string, string>> = {
   "Alan Silva": "alan-silva",
+  "Ana Dâmaso": "ana-damaso",
   "Ana Sol": "ana-sol",
   "Diego Castro": "diego-castro",
   "Felipe Fonseca": "felipe-fonseca",
+  "Fernanda Eler": "fernanda-eler",
   "Gabriel Williams": "gabriel-williams",
   "Gui Yabiku": "gui-yabiku",
+  "Gustavo Candido": "gustavo-candido",
   "Ian Fernandes": "ian-fernandes",
   "Íris Mota": "iris-mota",
   "Júlia Leite": "julia-leite",
@@ -71,6 +74,7 @@ const castAnimations: Partial<Record<string, string>> = {
   "Letizia Pitol Zanuso": "letizia-pitol-zanuso",
   "Lisandra Pingo": "lisandra-pingo",
   "Mabi Martinhos": "mabi-martinhos",
+  "Nádia Rosa": "nadia-rosa",
 };
 
 // Use local /images/... photo paths when available.
