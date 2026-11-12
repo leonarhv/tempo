@@ -5,8 +5,8 @@ export type Group = "cast" | "direction";
 type Rectangle = { x: number; y: number; width: number; height: number };
 
 export const formats = {
-  stories: { label: "Stories", ratio: "9:16", height: 1280, columns: 1 },
-  feed: { label: "Feed", ratio: "1:1", height: 720, columns: 2 },
+  stories: { label: "Stories", ratio: "9:16", height: 1280, columns: 1, seconds: 10 },
+  feed: { label: "Feed", ratio: "1:1", height: 720, columns: 2, seconds: 30 },
 } as const;
 
 export type Format = keyof typeof formats;

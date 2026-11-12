@@ -23,6 +23,7 @@ export function InstagramStudio({ cast, direction }: {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [error, setError] = useState("");
   const artwork = useRef<SVGSVGElement>(null);
+  const activeExport = useRef<AbortController | null>(null);
   const layout = getCallLayout(format, group);
   const selection = selections[format];
   const seats = group === "direction" ? direction : selection.map((id) => cast.find((person) => person.id === id));
@@ -30,11 +31,13 @@ export function InstagramStudio({ cast, direction }: {
   const ready = selected.length === layout.tiles.length;
   const exporting = progress !== null;
   const names = selected.map(({ name }) => name.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").replace(/[^a-z0-9]+/g, "-"));
-  const filename = `tempo-${format}-${group === "direction" ? "direcao" : names.join("_")}.gif`;
+  const filename = `tempo-${format}-${group === "direction" ? "direcao" : names.join("_")}.mp4`;
 
   useEffect(() => {
     if (downloadUrl) return () => URL.revokeObjectURL(downloadUrl);
   }, [downloadUrl]);
+
+  useEffect(() => () => activeExport.current?.abort(), []);
 
   function clearDownload() {
     setDownloadUrl("");
@@ -49,16 +52,28 @@ export function InstagramStudio({ cast, direction }: {
     }));
   }
 
-  async function downloadGif() {
-    if (!ready || exporting || !artwork.current) return;
+  async function downloadVideo() {
+    if (!ready || activeExport.current || !artwork.current) return;
 
+    const controller = new AbortController();
+    activeExport.current = controller;
     setProgress(0);
     setError("");
     try {
       const overlay = artwork.current.cloneNode(true) as SVGSVGElement;
-      const { createCallGif } = await import("./create-call-gif");
-      const gif = await createCallGif(layout, selected, overlay, setProgress);
-      const url = URL.createObjectURL(gif);
+      const { createCallVideo } = await import("./create-call-video");
+      const video = await createCallVideo(layout, selected, overlay, {
+        seconds: formats[format].seconds,
+        signal: controller.signal,
+        onProgress: setProgress,
+      });
+      if (controller.signal.aborted) return;
+      if (!video) {
+        setError("Este navegador não consegue exportar MP4 em HD. Tente no Chrome ou Edge atualizado.");
+        return;
+      }
+
+      const url = URL.createObjectURL(video);
       setDownloadUrl(url);
 
       const link = document.createElement("a");
@@ -68,9 +83,10 @@ export function InstagramStudio({ cast, direction }: {
       link.click();
       link.remove();
     } catch {
-      setError("Não foi possível gerar o GIF. Tente baixar novamente.");
+      if (!controller.signal.aborted) setError("Não foi possível gerar o vídeo. Tente baixar novamente.");
     } finally {
-      setProgress(null);
+      activeExport.current = null;
+      if (!controller.signal.aborted) setProgress(null);
     }
   }
 
@@ -79,7 +95,7 @@ export function InstagramStudio({ cast, direction }: {
       <Link className={styles.back} href="/#elenco">Voltar ao elenco</Link>
       <header className={styles.header}>
         <h1>Chamada para Instagram</h1>
-        <p>Monte a chamada do elenco ou da direção e baixe em GIF.</p>
+        <p>Monte a chamada do elenco ou da direção e baixe o vídeo em MP4.</p>
       </header>
 
       <div className={styles.workspace}>
@@ -99,7 +115,7 @@ export function InstagramStudio({ cast, direction }: {
                   />
                   <span>
                     <strong>{formats[key].label}</strong>
-                    <small>{formats[key].ratio}</small>
+                    <small>{formats[key].ratio} · {formats[key].seconds} s</small>
                   </span>
                 </label>
               ))}
@@ -155,13 +171,13 @@ export function InstagramStudio({ cast, direction }: {
 
         <div className={styles.actions}>
           {downloadUrl ? (
-            <a className="button" href={downloadUrl} download={filename}>Baixar GIF novamente</a>
+            <a className="button" href={downloadUrl} download={filename}>Baixar vídeo novamente</a>
           ) : (
-            <button className="button" type="button" disabled={!ready || exporting} onClick={downloadGif}>
-              {exporting ? "Gerando GIF…" : "Baixar GIF"}
+            <button className="button" type="button" disabled={!ready || exporting} onClick={downloadVideo}>
+              {exporting ? "Gerando vídeo…" : "Baixar vídeo"}
             </button>
           )}
-          {exporting && <progress aria-label="Progresso da geração do GIF" max={1} value={progress || undefined} />}
+          {exporting && <progress aria-label="Progresso da geração do vídeo" max={1} value={progress || undefined} />}
           {error && <p role="alert">{error}</p>}
         </div>
       </div>

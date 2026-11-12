@@ -1,17 +1,16 @@
-import { applyPalette, GIFEncoder, quantize } from "gifenc";
 import { decompressFrame, parseGIF, type ParsedFrame } from "gifuct-js";
+import { BufferTarget, canEncodeVideo, CanvasSource, Mp4OutputFormat, Output, Quality } from "mediabunny";
 import type { ProductionMember } from "@/lib/program";
 import { getPortrait, type CallLayout } from "./call-layout";
 
-const frameDelay = 80;
-const paletteSamples = 5;
+const frameRate = 30;
 const exportWidth = 1080;
 
-function canvasContext(width: number, height: number, willReadFrequently = false) {
+function canvasContext(width: number, height: number) {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
-  const context = canvas.getContext("2d", { willReadFrequently });
+  const context = canvas.getContext("2d");
   if (!context) throw new Error("Canvas indisponível");
   return context;
 }
@@ -73,7 +72,6 @@ async function loadAnimation(src: string) {
   let previousElapsed = 0;
 
   return {
-    duration,
     frameAt(elapsed: number) {
       const time = elapsed % duration;
       if (elapsed < previousElapsed || Math.floor(elapsed / duration) !== Math.floor(previousElapsed / duration)) {
@@ -116,7 +114,7 @@ async function loadTrack(person: ProductionMember, tile: CallLayout["tiles"][num
   if (!portrait) return undefined;
   if (person.animation) return { ...portrait, ...await loadAnimation(portrait.src) };
   const image = await loadImage(portrait.src);
-  return { ...portrait, duration: 0, frameAt: () => image };
+  return { ...portrait, frameAt: () => image };
 }
 
 function drawPortrait(
@@ -135,81 +133,68 @@ function drawPortrait(
   );
 }
 
-export async function createCallGif(
+export async function createCallVideo(
   { width, height, tiles, featured }: CallLayout,
   cast: ProductionMember[],
   svg: SVGSVGElement,
-  onProgress: (progress: number) => void,
+  { seconds, signal, onProgress }: {
+    seconds: number;
+    signal: AbortSignal;
+    onProgress: (progress: number) => void;
+  },
 ) {
   const scale = exportWidth / width;
   const exportHeight = Math.round(height * scale);
+  const codec = "avc";
+  const quality = new Quality({ bitrate: 8_000_000 });
+  if (!await canEncodeVideo(codec, { width: exportWidth, height: exportHeight, frameRate, quality })) return null;
+  signal.throwIfAborted();
+
   const [overlay, tracks] = await Promise.all([
     loadArtwork(svg, exportWidth, exportHeight),
     Promise.all(cast.map((person, index) => loadTrack(person, tiles[index], featured))),
   ]);
   const portraits = tracks.filter((track) => track !== undefined);
-  const context = canvasContext(exportWidth, exportHeight, true);
+  signal.throwIfAborted();
+  const context = canvasContext(exportWidth, exportHeight);
   context.scale(scale, scale);
   context.imageSmoothingQuality = "high";
-  const duration = Math.max(0, ...portraits.map((track) => track.duration));
+  const animated = cast.some(({ animation }) => animation);
 
   function renderFrame(time: number) {
-    context.clearRect(0, 0, width, height);
+    context.fillStyle = "#3c3749";
+    context.fillRect(0, 0, width, height);
     for (const { box, frameAt, verticalPosition } of portraits) {
-      context.fillStyle = "#3c3749";
-      context.fillRect(box.x, box.y, box.width, box.height);
       drawPortrait(context, frameAt(time), box, verticalPosition);
     }
     context.drawImage(overlay, 0, 0, width, height);
   }
 
-  // Sample the complete scene to keep one palette stable across the loop.
-  const sample = canvasContext(width / 6, Math.round(height / 6), true);
-  const sampleWidth = sample.canvas.width;
-  const sampleHeight = sample.canvas.height;
-  const pixelsPerSample = sampleWidth * sampleHeight * 4;
-  const sampleCount = duration ? paletteSamples : 1;
-  const samples = new Uint8ClampedArray(pixelsPerSample * sampleCount);
-  for (let index = 0; index < sampleCount; index += 1) {
-    renderFrame((index * duration) / sampleCount);
-    sample.drawImage(context.canvas, 0, 0, sampleWidth, sampleHeight);
-    samples.set(sample.getImageData(0, 0, sampleWidth, sampleHeight).data, index * pixelsPerSample);
-  }
+  const target = new BufferTarget();
+  const output = new Output({ format: new Mp4OutputFormat(), target });
+  const video = new CanvasSource(context.canvas, { codec, quality });
+  output.addVideoTrack(video, { frameRate });
 
-  const frameCount = Math.max(1, Math.ceil(duration / frameDelay));
-  const palette = quantize(samples, 255);
-  const transparentIndex = palette.length;
-  const globalPalette = [...palette, [0, 0, 0]];
-  const encoder = GIFEncoder();
-  let previous: Uint8Array | undefined;
+  try {
+    await output.start();
+    const frameCount = seconds * frameRate;
+    for (let frame = 0; frame < frameCount; frame += 1) {
+      signal.throwIfAborted();
+      const timestamp = frame / frameRate;
+      if (animated || frame === 0) renderFrame(timestamp * 1000);
+      await video.add(timestamp, 1 / frameRate);
 
-  for (let frame = 0; frame < frameCount; frame += 1) {
-    renderFrame(frame * frameDelay);
-    const pixels = context.getImageData(0, 0, exportWidth, exportHeight).data;
-    const indexed = applyPalette(pixels, palette);
-
-    // The rounded corners stay transparent, and unchanged pixels reuse the previous frame.
-    for (let pixel = 0; pixel < indexed.length; pixel += 1) {
-      const color = pixels[pixel * 4 + 3] < 128 ? transparentIndex : indexed[pixel];
-      indexed[pixel] = previous?.[pixel] === color ? transparentIndex : color;
-      if (previous) previous[pixel] = color;
+      if (frame % 10 === 0) {
+        onProgress((frame + 1) / frameCount);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      }
     }
-    if (frame === 0 && frameCount > 1) previous = indexed.slice();
-
-    encoder.writeFrame(indexed, exportWidth, exportHeight, {
-      delay: frameDelay,
-      palette: frame === 0 ? globalPalette : undefined,
-      repeat: 0,
-      dispose: 1,
-      transparent: true,
-      transparentIndex,
-    });
-
-    if (frame % 4 === 0) {
-      onProgress((frame + 1) / frameCount);
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    }
+    signal.throwIfAborted();
+    await output.finalize();
+    if (!target.buffer) throw new Error("Vídeo vazio");
+    return new Blob([target.buffer], { type: "video/mp4" });
+  } catch (error) {
+    await output.cancel();
+    throw error;
   }
-  encoder.finish();
-  return new Blob([encoder.bytes()], { type: "image/gif" });
 }
