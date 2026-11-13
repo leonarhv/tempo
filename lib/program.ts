@@ -45,7 +45,7 @@ const castMembers: [name: string, portraitFile?: string, video?: ProductionMembe
   ["Diego Castro", "diego-castro.webp"],
   ["Felipe Fonseca", "felipe-fonseca.webp"],
   ["Fernanda Eler", "fernanda-eler.webp"],
-  ["Gabriel Williams", "gabriel-williams.webp"],
+  ["Gabryel Williams", "gabriel-williams.webp"],
   ["Gui Yabiku", "gui-yabiku.webp"],
   ["Gustavo Candido", "gustavo-candido.webp"],
   ["Íris Mota", "iris-mota.webp"],
@@ -54,7 +54,7 @@ const castMembers: [name: string, portraitFile?: string, video?: ProductionMembe
   ["Leonardo Vieira", "leonardo-vieira.webp"],
   ["Letizia Pitol Zanuso", "letizia-pitol-zanuso.webp"],
   ["Lisandra Pingo", "lisandra-pingo.webp"],
-  ["Mabi Martinhos", "mabi-martinhos.webp"],
+  ["Mabi Martinho", "mabi-martinhos.webp"],
   [
     "Murillo Navarro",
     "murillo-navarro.webp",
@@ -75,7 +75,7 @@ const castAnimations: Partial<Record<string, string>> = {
   "Diego Castro": "diego-castro",
   "Felipe Fonseca": "felipe-fonseca",
   "Fernanda Eler": "fernanda-eler",
-  "Gabriel Williams": "gabriel-williams",
+  "Gabryel Williams": "gabriel-williams",
   "Gui Yabiku": "gui-yabiku",
   "Gustavo Candido": "gustavo-candido",
   "Ian Fernandes": "ian-fernandes",
@@ -84,7 +84,7 @@ const castAnimations: Partial<Record<string, string>> = {
   "Leonardo Vieira": "leonardo-vieira",
   "Letizia Pitol Zanuso": "letizia-pitol-zanuso",
   "Lisandra Pingo": "lisandra-pingo",
-  "Mabi Martinhos": "mabi-martinhos",
+  "Mabi Martinho": "mabi-martinhos",
   "Nádia Rosa": "nadia-rosa",
 };
 
