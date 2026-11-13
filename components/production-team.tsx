@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import type { CSSProperties } from "react";
 import { Icon } from "@/components/icons";
 import { PixelatedPortrait } from "@/components/pixelated-portrait";
@@ -16,6 +16,49 @@ const avatarColors = [
   "#909fbd",
 ];
 
+const reducedMotionQuery = "(prefers-reduced-motion: reduce)";
+
+function subscribeToReducedMotion(onChange: () => void) {
+  const preference = window.matchMedia(reducedMotionQuery);
+  preference.addEventListener("change", onChange);
+  return () => preference.removeEventListener("change", onChange);
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia(reducedMotionQuery).matches;
+}
+
+function CallVideo({
+  video,
+  motionPaused,
+}: {
+  video: NonNullable<ProductionMember["video"]>;
+  motionPaused: boolean;
+}) {
+  const reducedMotion = useSyncExternalStore(
+    subscribeToReducedMotion,
+    prefersReducedMotion,
+    () => true,
+  );
+
+  if (motionPaused || reducedMotion) {
+    return <Image src={video.poster} alt="" fill unoptimized />;
+  }
+
+  return (
+    <video
+      className="call-video"
+      src={video.src}
+      poster={video.poster}
+      autoPlay
+      loop
+      muted
+      playsInline
+      aria-hidden="true"
+    />
+  );
+}
+
 function CallParticipant({
   person,
   index,
@@ -28,7 +71,7 @@ function CallParticipant({
   motionPaused?: boolean;
 }) {
   const [initial] = person.name.trim();
-  const cameraOff = !person.pixelated && !person.animation;
+  const cameraOff = !person.pixelated && !person.animation && !person.video;
 
   return (
     <li
@@ -42,10 +85,12 @@ function CallParticipant({
       <figure>
         {person.pixelated ? (
           <PixelatedPortrait name={person.name} />
+        ) : person.video ? (
+          <CallVideo video={person.video} motionPaused={motionPaused} />
         ) : person.animation ? (
           <picture>
             <source
-              media="(prefers-reduced-motion: reduce)"
+              media={reducedMotionQuery}
               srcSet={person.animation.poster}
             />
             <Image

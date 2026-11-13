@@ -650,8 +650,14 @@ button:focus-visible .photo-expand {
   position: absolute;
   inset: 0;
 }
-.call-participant img {
+.call-participant img,
+.call-video {
   object-fit: cover;
+}
+.call-video {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .call-pixelated-portrait {
   display: block;

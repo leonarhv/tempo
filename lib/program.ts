@@ -30,10 +30,14 @@ export type ProductionMember = {
     poster: string;
     alt: string;
   };
+  video?: {
+    src: string;
+    poster: string;
+  };
   pixelated?: boolean;
 };
 
-const castMembers: [name: string, portraitFile?: string][] = [
+const castMembers: [name: string, portraitFile?: string, video?: ProductionMember["video"]][] = [
   ["Alan Silva"],
   ["Ana Dâmaso", "ana-damaso.webp"],
   ["Ana Sol"],
@@ -51,7 +55,14 @@ const castMembers: [name: string, portraitFile?: string][] = [
   ["Letizia Pitol Zanuso", "letizia-pitol-zanuso.webp"],
   ["Lisandra Pingo", "lisandra-pingo.webp"],
   ["Mabi Martinhos", "mabi-martinhos.webp"],
-  ["Murillo Navarro", "murillo-navarro.webp"],
+  [
+    "Murillo Navarro",
+    "murillo-navarro.webp",
+    {
+      src: "/images/call/murillo-navarro.mp4",
+      poster: "/images/call/murillo-navarro-poster.webp",
+    },
+  ],
   ["Nádia Rosa", "nadia-rosa.webp"],
   ["Ian Fernandes", "ian-fernandes.webp"],
   ["Sofia Donadelli", "sofia-donadelli.webp"],
@@ -84,6 +95,10 @@ export const productionTeam: ProductionMember[] = [
     name: "André Haidamus",
     role: "Direção",
     photo: "/images/call/andre-haidamus.webp",
+    video: {
+      src: "/images/call/andre-haidamus.mp4",
+      poster: "/images/call/andre-haidamus-poster.webp",
+    },
   },
   {
     id: "assistencia-direcao",
@@ -102,7 +117,7 @@ export const productionTeam: ProductionMember[] = [
     role: "Assistência de direção",
     photo: "/images/call/lais-marques.webp",
   },
-  ...castMembers.map(([name, portraitFile], index): ProductionMember => {
+  ...castMembers.map(([name, portraitFile, video], index): ProductionMember => {
     const animationName = castAnimations[name];
 
     return {
@@ -110,6 +125,7 @@ export const productionTeam: ProductionMember[] = [
       name,
       role: "Elenco",
       photo: portraitFile ? `/images/call/${portraitFile}` : null,
+      video,
       animation: animationName
         ? {
             src: `/images/call/${animationName}.gif`,
