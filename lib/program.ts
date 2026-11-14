@@ -116,6 +116,11 @@ export const productionTeam: ProductionMember[] = [
     name: "Laís Marques",
     role: "Assistência de direção",
     photo: "/images/call/lais-marques.webp",
+    animation: {
+      src: "/images/call/lais-marques.gif",
+      poster: "/images/call/lais-marques-poster.png",
+      alt: "Retrato de Laís Marques",
+    },
   },
   ...castMembers.map(([name, portraitFile, video], index): ProductionMember => {
     const animationName = castAnimations[name];
