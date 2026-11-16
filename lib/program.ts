@@ -76,6 +76,7 @@ const castAnimations: Partial<Record<string, string>> = {
   "Mabi Martinho": "mabi-martinhos",
   "Murillo Navarro": "murillo-navarro",
   "Nádia Rosa": "nadia-rosa",
+  "Sofia Donadelli": "sofia-donadelli",
 };
 
 // Use local /images/... photo paths when available.
