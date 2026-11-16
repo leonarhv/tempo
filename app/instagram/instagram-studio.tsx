@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { ProductionMember } from "@/lib/program";
 import { CallPreview } from "./call-preview";
-import { formats, getCallLayout, type Format, type Group } from "./call-layout";
+import { formats, getCallLayout, storySeatCounts, type Format, type Group, type StorySeatCount } from "./call-layout";
 import styles from "./instagram.module.css";
 
 const groups = { cast: "Elenco", direction: "Direção" } as const;
@@ -15,8 +15,9 @@ export function InstagramStudio({ cast, direction }: {
 }) {
   const [format, setFormat] = useState<Format>("stories");
   const [group, setGroup] = useState<Group>("cast");
+  const [storySeatCount, setStorySeatCount] = useState<StorySeatCount>(2);
   const [selections, setSelections] = useState<Record<Format, string[]>>({
-    stories: ["", ""],
+    stories: ["", "", ""],
     feed: ["", "", "", ""],
   });
   const [progress, setProgress] = useState<number | null>(null);
@@ -24,8 +25,8 @@ export function InstagramStudio({ cast, direction }: {
   const [error, setError] = useState("");
   const artwork = useRef<SVGSVGElement>(null);
   const activeExport = useRef<AbortController | null>(null);
-  const layout = getCallLayout(format, group);
-  const selection = selections[format];
+  const layout = getCallLayout(format, group, storySeatCount);
+  const selection = selections[format].slice(0, layout.tiles.length);
   const seats = group === "direction" ? direction : selection.map((id) => cast.find((person) => person.id === id));
   const selected = seats.filter((person) => person !== undefined);
   const ready = selected.length === layout.tiles.length;
@@ -48,7 +49,10 @@ export function InstagramStudio({ cast, direction }: {
     clearDownload();
     setSelections((previous) => ({
       ...previous,
-      [format]: previous[format].map((value, slot) => slot === index ? id : value),
+      [format]: previous[format].map((value, slot) => {
+        if (slot === index) return id;
+        return value === id ? "" : value;
+      }),
     }));
   }
 
@@ -140,6 +144,27 @@ export function InstagramStudio({ cast, direction }: {
               ))}
             </div>
           </fieldset>
+
+          {format === "stories" && group === "cast" && (
+            <fieldset disabled={exporting}>
+              <legend>Pessoas no Story</legend>
+              <div className={styles.choices}>
+                {storySeatCounts.map((count) => (
+                  <label className={styles.choice} key={count}>
+                    <input
+                      type="radio"
+                      name="instagram-story-seats"
+                      className="visually-hidden"
+                      value={count}
+                      checked={count === storySeatCount}
+                      onChange={() => { clearDownload(); setStorySeatCount(count); }}
+                    />
+                    <span><strong>{count} pessoas</strong></span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          )}
         </div>
 
         <div className={styles.participants}>

@@ -11,7 +11,10 @@ export const formats = {
 
 export type Format = keyof typeof formats;
 
-export function getCallLayout(format: Format, group: Group) {
+export const storySeatCounts = [2, 3] as const;
+export type StorySeatCount = (typeof storySeatCounts)[number];
+
+export function getCallLayout(format: Format, group: Group, storySeatCount: StorySeatCount = 2) {
   const { height, columns } = formats[format];
   const width = 720;
   const padding = 20;
@@ -19,8 +22,6 @@ export function getCallLayout(format: Format, group: Group) {
   const gap = 14;
   const contentWidth = width - 2 * padding;
   const contentHeight = height - 2 * padding - headingHeight;
-  const tileWidth = (contentWidth - (columns - 1) * gap) / columns;
-  const tileHeight = (contentHeight - gap) / 2;
   const featured = group === "direction";
   const x = padding;
   const y = padding + headingHeight;
@@ -44,7 +45,10 @@ export function getCallLayout(format: Format, group: Group) {
       { x, y: y + leadHeight + sideHeight + 2 * gap, width: contentWidth, height: sideHeight },
     ];
   } else {
-    tiles = Array.from({ length: columns * 2 }, (_, index) => ({
+    const rows = format === "stories" ? storySeatCount : 2;
+    const tileWidth = (contentWidth - (columns - 1) * gap) / columns;
+    const tileHeight = (contentHeight - (rows - 1) * gap) / rows;
+    tiles = Array.from({ length: columns * rows }, (_, index) => ({
       x: x + (index % columns) * (tileWidth + gap),
       y: y + Math.floor(index / columns) * (tileHeight + gap),
       width: tileWidth,
