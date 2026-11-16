@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { ProductionMember } from "@/lib/program";
 import { CallPreview } from "./call-preview";
-import { formats, getCallLayout, storySeatCounts, type Format, type Group, type StorySeatCount } from "./call-layout";
+import { formats, getCallLayout, type Format, type Group } from "./call-layout";
 import styles from "./instagram.module.css";
 
 const groups = { cast: "Elenco", direction: "Direção" } as const;
+const exportLabels = { mp4: "vídeo", png: "imagem" } as const;
+type ExportExtension = keyof typeof exportLabels;
 
 export function InstagramStudio({ cast, direction }: {
   cast: ProductionMember[];
@@ -15,33 +17,36 @@ export function InstagramStudio({ cast, direction }: {
 }) {
   const [format, setFormat] = useState<Format>("stories");
   const [group, setGroup] = useState<Group>("cast");
-  const [storySeatCount, setStorySeatCount] = useState<StorySeatCount>(2);
+  const [seatCounts, setSeatCounts] = useState<Record<Format, number>>({ stories: 2, feed: 4 });
   const [selections, setSelections] = useState<Record<Format, string[]>>({
     stories: ["", "", ""],
-    feed: ["", "", "", ""],
+    feed: ["", "", "", "", ""],
   });
   const [progress, setProgress] = useState<number | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState("");
+  const [download, setDownload] = useState<{ extension: ExportExtension; url: string } | null>(null);
   const [error, setError] = useState("");
   const artwork = useRef<SVGSVGElement>(null);
   const activeExport = useRef<AbortController | null>(null);
-  const layout = getCallLayout(format, group, storySeatCount);
+  const layout = getCallLayout(format, group, seatCounts[format]);
   const selection = selections[format].slice(0, layout.tiles.length);
   const seats = group === "direction" ? direction : selection.map((id) => cast.find((person) => person.id === id));
   const selected = seats.filter((person) => person !== undefined);
   const ready = selected.length === layout.tiles.length;
   const exporting = progress !== null;
+  const downloadFormats: ExportExtension[] = format === "feed" && group === "cast" && layout.tiles.length === 5
+    ? ["png", "mp4"]
+    : ["mp4"];
   const names = selected.map(({ name }) => name.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").replace(/[^a-z0-9]+/g, "-"));
-  const filename = `tempo-${format}-${group === "direction" ? "direcao" : names.join("_")}.mp4`;
+  const filename = `tempo-${format}-${group === "direction" ? "direcao" : names.join("_")}`;
 
   useEffect(() => {
-    if (downloadUrl) return () => URL.revokeObjectURL(downloadUrl);
-  }, [downloadUrl]);
+    if (download) return () => URL.revokeObjectURL(download.url);
+  }, [download]);
 
   useEffect(() => () => activeExport.current?.abort(), []);
 
   function clearDownload() {
-    setDownloadUrl("");
+    setDownload(null);
     setError("");
   }
 
@@ -56,7 +61,7 @@ export function InstagramStudio({ cast, direction }: {
     }));
   }
 
-  async function downloadVideo() {
+  async function downloadCall(extension: ExportExtension) {
     if (!ready || activeExport.current || !artwork.current) return;
 
     const controller = new AbortController();
@@ -65,29 +70,32 @@ export function InstagramStudio({ cast, direction }: {
     setError("");
     try {
       const overlay = artwork.current.cloneNode(true) as SVGSVGElement;
-      const { createCallVideo } = await import("./create-call-video");
-      const video = await createCallVideo(layout, selected, overlay, {
-        seconds: formats[format].seconds,
-        signal: controller.signal,
-        onProgress: setProgress,
-      });
+      const { createCallImage, createCallVideo } = await import("./export-call");
+      controller.signal.throwIfAborted();
+      const file = extension === "png"
+        ? await createCallImage(layout, selected, overlay)
+        : await createCallVideo(layout, selected, overlay, {
+          seconds: formats[format].seconds,
+          signal: controller.signal,
+          onProgress: setProgress,
+        });
       if (controller.signal.aborted) return;
-      if (!video) {
+      if (!file) {
         setError("Este navegador não consegue exportar MP4 em HD. Tente no Chrome ou Edge atualizado.");
         return;
       }
 
-      const url = URL.createObjectURL(video);
-      setDownloadUrl(url);
+      const url = URL.createObjectURL(file);
+      setDownload({ extension, url });
 
       const link = document.createElement("a");
       link.href = url;
-      link.download = filename;
+      link.download = `${filename}.${extension}`;
       document.body.append(link);
       link.click();
       link.remove();
     } catch {
-      if (!controller.signal.aborted) setError("Não foi possível gerar o vídeo. Tente baixar novamente.");
+      if (!controller.signal.aborted) setError("Não foi possível gerar o arquivo. Tente baixar novamente.");
     } finally {
       activeExport.current = null;
       if (!controller.signal.aborted) setProgress(null);
@@ -99,7 +107,7 @@ export function InstagramStudio({ cast, direction }: {
       <Link className={styles.back} href="/#elenco">Voltar ao elenco</Link>
       <header className={styles.header}>
         <h1>Chamada para Instagram</h1>
-        <p>Monte a chamada do elenco ou da direção e baixe o vídeo em MP4.</p>
+        <p>Monte e baixe a chamada do elenco ou da direção.</p>
       </header>
 
       <div className={styles.workspace}>
@@ -145,19 +153,22 @@ export function InstagramStudio({ cast, direction }: {
             </div>
           </fieldset>
 
-          {format === "stories" && group === "cast" && (
+          {group === "cast" && (
             <fieldset disabled={exporting}>
-              <legend>Pessoas no Story</legend>
+              <legend>{format === "stories" ? "Pessoas no Story" : "Pessoas no Feed"}</legend>
               <div className={styles.choices}>
-                {storySeatCounts.map((count) => (
+                {formats[format].seatCounts.map((count) => (
                   <label className={styles.choice} key={count}>
                     <input
                       type="radio"
-                      name="instagram-story-seats"
+                      name="instagram-seat-count"
                       className="visually-hidden"
                       value={count}
-                      checked={count === storySeatCount}
-                      onChange={() => { clearDownload(); setStorySeatCount(count); }}
+                      checked={count === seatCounts[format]}
+                      onChange={() => {
+                        clearDownload();
+                        setSeatCounts((previous) => ({ ...previous, [format]: count }));
+                      }}
                     />
                     <span><strong>{count} pessoas</strong></span>
                   </label>
@@ -195,14 +206,16 @@ export function InstagramStudio({ cast, direction }: {
         </div>
 
         <div className={styles.actions}>
-          {downloadUrl ? (
-            <a className="button" href={downloadUrl} download={filename}>Baixar vídeo novamente</a>
+          {downloadFormats.map((extension) => download?.extension === extension && !exporting ? (
+            <a key={extension} className="button" href={download.url} download={`${filename}.${extension}`}>
+              Baixar {exportLabels[extension]} novamente
+            </a>
           ) : (
-            <button className="button" type="button" disabled={!ready || exporting} onClick={downloadVideo}>
-              {exporting ? "Gerando vídeo…" : "Baixar vídeo"}
+            <button key={extension} className="button" type="button" disabled={!ready || exporting} onClick={() => downloadCall(extension)}>
+              Baixar {exportLabels[extension]}
             </button>
-          )}
-          {exporting && <progress aria-label="Progresso da geração do vídeo" max={1} value={progress || undefined} />}
+          ))}
+          {exporting && <progress aria-label="Progresso da exportação" max={1} value={progress || undefined} />}
           {error && <p role="alert">{error}</p>}
         </div>
       </div>

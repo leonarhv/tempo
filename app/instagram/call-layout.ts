@@ -5,16 +5,13 @@ export type Group = "cast" | "direction";
 type Rectangle = { x: number; y: number; width: number; height: number };
 
 export const formats = {
-  stories: { label: "Stories", ratio: "9:16", height: 1280, columns: 1, seconds: 10 },
-  feed: { label: "Feed", ratio: "1:1", height: 720, columns: 2, seconds: 30 },
+  stories: { label: "Stories", ratio: "9:16", height: 1280, columns: 1, seconds: 10, seatCounts: [2, 3] },
+  feed: { label: "Feed", ratio: "1:1", height: 720, columns: 2, seconds: 30, seatCounts: [4, 5] },
 } as const;
 
 export type Format = keyof typeof formats;
 
-export const storySeatCounts = [2, 3] as const;
-export type StorySeatCount = (typeof storySeatCounts)[number];
-
-export function getCallLayout(format: Format, group: Group, storySeatCount: StorySeatCount = 2) {
+export function getCallLayout(format: Format, group: Group, seatCount: number = formats[format].seatCounts[0]) {
   const { height, columns } = formats[format];
   const width = 720;
   const padding = 20;
@@ -45,15 +42,20 @@ export function getCallLayout(format: Format, group: Group, storySeatCount: Stor
       { x, y: y + leadHeight + sideHeight + 2 * gap, width: contentWidth, height: sideHeight },
     ];
   } else {
-    const rows = format === "stories" ? storySeatCount : 2;
+    const rows = Math.ceil(seatCount / columns);
     const tileWidth = (contentWidth - (columns - 1) * gap) / columns;
     const tileHeight = (contentHeight - (rows - 1) * gap) / rows;
-    tiles = Array.from({ length: columns * rows }, (_, index) => ({
-      x: x + (index % columns) * (tileWidth + gap),
-      y: y + Math.floor(index / columns) * (tileHeight + gap),
-      width: tileWidth,
-      height: tileHeight,
-    }));
+    tiles = Array.from({ length: seatCount }, (_, index) => {
+      const row = Math.floor(index / columns);
+      const seatsInRow = Math.min(columns, seatCount - row * columns);
+      const rowOffset = (columns - seatsInRow) * (tileWidth + gap) / 2;
+      return {
+        x: x + rowOffset + (index % columns) * (tileWidth + gap),
+        y: y + row * (tileHeight + gap),
+        width: tileWidth,
+        height: tileHeight,
+      };
+    });
   }
 
   return {

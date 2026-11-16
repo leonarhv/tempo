@@ -109,11 +109,11 @@ async function loadAnimation(src: string) {
   };
 }
 
-async function loadTrack(person: ProductionMember, tile: CallLayout["tiles"][number], featured: boolean) {
+async function loadTrack(person: ProductionMember, tile: CallLayout["tiles"][number], featured: boolean, animate: boolean) {
   const portrait = getPortrait(person, tile, featured);
   if (!portrait) return undefined;
-  if (person.animation) return { ...portrait, ...await loadAnimation(portrait.src) };
-  const image = await loadImage(portrait.src);
+  if (animate && person.animation) return { ...portrait, ...await loadAnimation(portrait.src) };
+  const image = await loadImage(person.animation?.poster ?? portrait.src);
   return { ...portrait, frameAt: () => image };
 }
 
@@ -133,33 +133,22 @@ function drawPortrait(
   );
 }
 
-export async function createCallVideo(
+async function createCallCanvas(
   { width, height, tiles, featured }: CallLayout,
   cast: ProductionMember[],
   svg: SVGSVGElement,
-  { seconds, signal, onProgress }: {
-    seconds: number;
-    signal: AbortSignal;
-    onProgress: (progress: number) => void;
-  },
+  exportHeight: number,
+  animate: boolean,
 ) {
   const scale = exportWidth / width;
-  const exportHeight = Math.round(height * scale);
-  const codec = "avc";
-  const quality = new Quality({ bitrate: 8_000_000 });
-  if (!await canEncodeVideo(codec, { width: exportWidth, height: exportHeight, frameRate, quality })) return null;
-  signal.throwIfAborted();
-
   const [overlay, tracks] = await Promise.all([
     loadArtwork(svg, exportWidth, exportHeight),
-    Promise.all(cast.map((person, index) => loadTrack(person, tiles[index], featured))),
+    Promise.all(cast.map((person, index) => loadTrack(person, tiles[index], featured, animate))),
   ]);
   const portraits = tracks.filter((track) => track !== undefined);
-  signal.throwIfAborted();
   const context = canvasContext(exportWidth, exportHeight);
   context.scale(scale, scale);
   context.imageSmoothingQuality = "high";
-  const animated = cast.some(({ animation }) => animation);
 
   function renderFrame(time: number) {
     context.fillStyle = "#3c3749";
@@ -170,9 +159,47 @@ export async function createCallVideo(
     context.drawImage(overlay, 0, 0, width, height);
   }
 
+  return { canvas: context.canvas, renderFrame };
+}
+
+export async function createCallImage(
+  layout: CallLayout,
+  cast: ProductionMember[],
+  svg: SVGSVGElement,
+) {
+  const exportHeight = Math.round(layout.height * exportWidth / layout.width);
+  const { canvas, renderFrame } = await createCallCanvas(layout, cast, svg, exportHeight, false);
+  renderFrame(0);
+  return new Promise<Blob>((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("Imagem vazia"));
+    }, "image/png");
+  });
+}
+
+export async function createCallVideo(
+  layout: CallLayout,
+  cast: ProductionMember[],
+  svg: SVGSVGElement,
+  { seconds, signal, onProgress }: {
+    seconds: number;
+    signal: AbortSignal;
+    onProgress: (progress: number) => void;
+  },
+) {
+  const exportHeight = Math.round(layout.height * exportWidth / layout.width);
+  const codec = "avc";
+  const quality = new Quality({ bitrate: 8_000_000 });
+  if (!await canEncodeVideo(codec, { width: exportWidth, height: exportHeight, frameRate, quality })) return null;
+  signal.throwIfAborted();
+  const { canvas, renderFrame } = await createCallCanvas(layout, cast, svg, exportHeight, true);
+  signal.throwIfAborted();
+  const animated = cast.some(({ animation }) => animation);
+
   const target = new BufferTarget();
   const output = new Output({ format: new Mp4OutputFormat(), target });
-  const video = new CanvasSource(context.canvas, { codec, quality });
+  const video = new CanvasSource(canvas, { codec, quality });
   output.addVideoTrack(video, { frameRate });
 
   try {
