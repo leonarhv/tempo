@@ -9,7 +9,7 @@ export const program = {
       url: "https://www.instagram.com/gatopingado_coletivo/",
     },
   ],
-  ticketUrl: null as string | null,
+  ticketUrl: "https://nomacu.com/r/t/de81f104-51b1-4533-93bc-ff8e687b210f?utm_source=site" as string | null,
   venue: "Teatro Escola Macunaíma",
   room: "Teatro 4",
   synopsis: [
